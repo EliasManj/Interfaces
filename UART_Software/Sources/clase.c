@@ -6,9 +6,9 @@
 #include "derivative.h" /* include peripheral declarations */
 
 void UART_Init(void);
-void UART_Send(void);
+void UART_Send_Byte(void);
 
-unsigned char data;
+unsigned char rx_data;
 unsigned char dato;
 unsigned char IC;
 unsigned char IC_value;
@@ -16,7 +16,7 @@ unsigned char tb;
 unsigned char cont;
 unsigned char valor_referencia;
 unsigned char RxD;
-unsigned char RX_count;
+unsigned char rx_count;
 
 
 
@@ -43,15 +43,15 @@ void interrupt_INPUT_CAPTURE(void)
 			if(RxD != 0){
 				dato |= 0x80;
 			}
-			RX_count--;
+			rx_count--;
 		}
-		if(RX_count==2){
+		if(rx_count==2){
 			if(RxD==0){
 				
 			}//frame error
-			else RX_count--;
+			else rx_count--;
 		}
-		if(RX_count==1){
+		if(rx_count==1){
 			//data_ready = 1;
 			//config ic flanco de bajada
 		}

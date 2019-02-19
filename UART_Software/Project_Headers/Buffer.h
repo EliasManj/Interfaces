@@ -10,7 +10,7 @@
 
 #include "derivative.h" /* include peripheral declarations */
 
-#define BUFLEN 30
+#define BUFLEN 1000
 
 struct UART_Buffer {
 	volatile uint32_t head;
@@ -26,6 +26,8 @@ uint8_t buffer_pop(bufferType *bf);
 uint32_t buffer_inc(uint32_t pt, uint32_t cap);
 uint8_t buffer_is_full(bufferType *bf);
 uint32_t buffer_len(bufferType *bf);
+uint8_t buffer_is_empty(bufferType *bf);
+uint8_t buffer_has_one(bufferType *bf);
 
 
 #endif /* BUFFER_H_ */

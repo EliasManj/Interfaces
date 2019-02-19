@@ -10,5 +10,6 @@
 
 void Test_Signal_Init();
 void Test_Signal_Toggle();
+void Test_Count();
 
 #endif /* TEST_SIGNAL_H_ */

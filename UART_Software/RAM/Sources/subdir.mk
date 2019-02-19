@@ -7,36 +7,43 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS_QUOTED += \
 "../Sources/Buffer.c" \
+"../Sources/Test_Signal.c" \
 "../Sources/clase.c" \
 "../Sources/main.c" \
 
 C_SRCS += \
 ../Sources/Buffer.c \
+../Sources/Test_Signal.c \
 ../Sources/clase.c \
 ../Sources/main.c \
 
 OBJS += \
 ./Sources/Buffer.o \
+./Sources/Test_Signal.o \
 ./Sources/clase.o \
 ./Sources/main.o \
 
 C_DEPS += \
 ./Sources/Buffer.d \
+./Sources/Test_Signal.d \
 ./Sources/clase.d \
 ./Sources/main.d \
 
 OBJS_QUOTED += \
 "./Sources/Buffer.o" \
+"./Sources/Test_Signal.o" \
 "./Sources/clase.o" \
 "./Sources/main.o" \
 
 C_DEPS_QUOTED += \
 "./Sources/Buffer.d" \
+"./Sources/Test_Signal.d" \
 "./Sources/clase.d" \
 "./Sources/main.d" \
 
 OBJS_OS_FORMAT += \
 ./Sources/Buffer.o \
+./Sources/Test_Signal.o \
 ./Sources/clase.o \
 ./Sources/main.o \
 
@@ -50,9 +57,17 @@ Sources/Buffer.o: ../Sources/Buffer.c
 	@echo 'Finished building: $<'
 	@echo ' '
 
-Sources/clase.o: ../Sources/clase.c
+Sources/Test_Signal.o: ../Sources/Test_Signal.c
 	@echo 'Building file: $<'
 	@echo 'Executing target #2 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/Test_Signal.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Test_Signal.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/clase.o: ../Sources/clase.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #3 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/clase.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/clase.o"
 	@echo 'Finished building: $<'
@@ -60,7 +75,7 @@ Sources/clase.o: ../Sources/clase.c
 
 Sources/main.o: ../Sources/main.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #3 $<'
+	@echo 'Executing target #4 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/main.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/main.o"
 	@echo 'Finished building: $<'

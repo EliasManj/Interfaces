@@ -2,9 +2,9 @@ Sources/Buffer.o: ../Sources/Buffer.c \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h \
- C:/Users/Miguel\ Elias/workspace/UART/Project_Headers/Buffer.h \
- C:/Users/Miguel\ Elias/workspace/UART/Project_Headers/derivative.h \
- C:/Users/Miguel\ Elias/workspace/UART/Project_Headers/MK64F12.h \
+ C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/Buffer.h \
+ C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/derivative.h \
+ C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/MK64F12.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ansi_parms.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewlGlobals.h \
@@ -20,11 +20,11 @@ C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix:
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h:
 
-C:/Users/Miguel\ Elias/workspace/UART/Project_Headers/Buffer.h:
+C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/Buffer.h:
 
-C:/Users/Miguel\ Elias/workspace/UART/Project_Headers/derivative.h:
+C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/derivative.h:
 
-C:/Users/Miguel\ Elias/workspace/UART/Project_Headers/MK64F12.h:
+C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/MK64F12.h:
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h:
 

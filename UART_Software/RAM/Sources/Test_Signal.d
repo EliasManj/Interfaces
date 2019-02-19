@@ -1,7 +1,8 @@
-Sources/clase.o: ../Sources/clase.c \
+Sources/Test_Signal.o: ../Sources/Test_Signal.c \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h \
+ C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/Test_Signal.h \
  C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/derivative.h \
  C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/MK64F12.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h \
@@ -18,6 +19,8 @@ C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix:
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h:
+
+C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/Test_Signal.h:
 
 C:/Users/Miguel\ Elias/workspace/UART_Software/Project_Headers/derivative.h:
 

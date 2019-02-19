@@ -8,6 +8,8 @@
 #include "Test_Signal.h"
 #include "derivative.h" /* include peripheral declarations */
 
+uint32_t n;
+
 //Use PTB2
 
 void Test_Signal_Init()
@@ -25,4 +27,10 @@ void Test_Signal_Toggle()
 {
 	GPIOB_PDOR ^= (1<<2);
 	GPIOB_PDOR ^= (1<<21); //Put PTB21 as HIGH
+}
+
+void Test_Count(uint32_t val){
+	if(n++ == val){
+		n = 0;
+	}
 }
