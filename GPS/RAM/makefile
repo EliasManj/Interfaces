@@ -2,7 +2,7 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-#Progress monitor hint: 6
+#Progress monitor hint: 5
 first : all
 -include ../makefile.init
 
@@ -58,7 +58,7 @@ all: warning-messages explicit-dependencies GPS.elf secondary-outputs
 # Tool invocations
 GPS.elf: $(OBJS) $(USER_OBJS) ../Project_Settings/Linker_Files/MK64FN1M0_ram.ld
 	@echo 'Building target: $@'
-	@echo 'Executing target #7 $@'
+	@echo 'Executing target #6 $@'
 	@echo 'Invoking: ARM Ltd Windows GCC C Linker'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc"  $(USER_OBJS_QUOTED) $(LIBS_QUOTED) @"GPS.args" -o"GPS.elf"
 	@echo 'Finished building target: $@'

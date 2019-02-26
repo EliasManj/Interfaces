@@ -10,38 +10,46 @@
 
 #include "derivative.h" /* include peripheral declarations */
 
-#define START_BYTE$ 	0x00
-#define GPRMC 			0x01
-#define TIMESTAMP 		0x02
-#define WARNING			0x03
-
-#define COMA_CHAR 		','
+//GPGGA sentence parameters
+#define GPGGA_GPS_STR_LEN							66
+#define $GPGGA_START								1	
+#define $GPGGA_END									5	
+#define GPGGA_TIME_STAMP_START						7	
+#define GPGGA_TIME_STAMP_END						16	
+#define GPGGA_LATITUDE_START 						18
+#define GPGGA_LATITUDE_END 							28
+#define GPGGA_LONGUITUDE_START 						30
+#define GPGGA_LONGUITUDE_END 						41
+#define GPGGA_ALTITUDE_START						52
+#define GPGGA_ALTITUDE_END							59
 
 //Parser
 uint16_t current_state;
 
 struct GPS_Obj
 {
+	//$GPGGA,004108.000,2039.8052,N,10323.1903,W,1,05,1.8,1542.9,M,0.0,M,,*4B
 	//Control
 	uint16_t counter;
-	uint32_t comas_index[11];
-	uint8_t gps_string[66];
-	uint8_t GPRMC_String[6];
-	//GPS data
-	uint8_t time_stamp[6];
-	uint8_t validity;
-	uint8_t latitude[7];
-	uint8_t north_south;
-	uint8_t longuitude[8];
-	uint8_t east_west;
-	uint8_t knot_speed[5];
-} GPS_Default = {
-		0, {6, 13, 15, 23, 25, 34, 36, 42, 48, 55, 61}
+	uint8_t field_counter;
+	uint8_t gps_string[GPGGA_GPS_STR_LEN];
+	//GPGGA Data
+	uint8_t GPGGA_String[$GPGGA_END - $GPGGA_START + 1];
+	uint8_t time_stamp[GPGGA_TIME_STAMP_END - GPGGA_TIME_STAMP_START + 1];
+	uint8_t latitude[GPGGA_LATITUDE_END - GPGGA_LATITUDE_START + 1];
+	uint8_t longuitude[GPGGA_LONGUITUDE_END - GPGGA_LONGUITUDE_START + 1];
+	uint8_t altitude[GPGGA_ALTITUDE_END - GPGGA_ALTITUDE_START + 1];
+	//Parsed data
+	uint16_t latitude_DMS_Degree;
+	uint16_t latitude_DMS_Minutes;
+	uint16_t latitude_DMS_Seconds;
 };
 
 typedef struct GPS_Obj GPS_Struct;
 
-uint8_t* get_time_stamp(GPS_Struct *gps);
 uint8_t parse_gps_byte(GPS_Struct *gps, uint8_t byte);
+uint8_t validate_GPGGA(uint8_t string[]);
+void get_DMS_data(GPS_Struct *gps);
+void Compare_Byte(uint8_t uart_recive, uint8_t byte);
 
 #endif /* GPS_H_ */
