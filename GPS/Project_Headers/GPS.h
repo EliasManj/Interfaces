@@ -40,16 +40,19 @@ struct GPS_Obj
 	uint8_t longuitude[GPGGA_LONGUITUDE_END - GPGGA_LONGUITUDE_START + 1];
 	uint8_t altitude[GPGGA_ALTITUDE_END - GPGGA_ALTITUDE_START + 1];
 	//Parsed data
-	uint16_t latitude_DMS_Degree;
-	uint16_t latitude_DMS_Minutes;
-	uint16_t latitude_DMS_Seconds;
+	uint32_t latitude_DMS_Degree;
+	uint32_t latitude_DMS_Minutes;
+	uint32_t latitude_DMS_Seconds;
+	uint32_t longitude_DMS_Degree;
+	uint32_t longitude_DMS_Minutes;
+	uint32_t longitude_DMS_Seconds;
 };
 
 typedef struct GPS_Obj GPS_Struct;
 
 uint8_t parse_gps_byte(GPS_Struct *gps, uint8_t byte);
 uint8_t validate_GPGGA(uint8_t string[]);
-void get_DMS_data(GPS_Struct *gps);
+void set_DMS_data(GPS_Struct *gps);
 void Compare_Byte(uint8_t uart_recive, uint8_t byte);
 
 #endif /* GPS_H_ */

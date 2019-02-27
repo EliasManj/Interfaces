@@ -13,24 +13,16 @@
 
 //UART Buffer
 uint8_t uart_recive;
-bufferType Buffer_rx =
-{ 0, 0, BUFLEN,
-{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
-bufferType *rx_bf;
 
 //GPS 
 GPS_Struct GPS_Object;
 GPS_Struct *GPS_pt;
-
-uint16_t current_state;
-uint16_t gps_counter;
 
 void UART_Init(void);
 void UART_Write();
 
 int main(void)
 {
-	//rx_bf = &Buffer_rx;
 	GPS_pt = &GPS_Object;
 	UART_Init();
 	while (1)

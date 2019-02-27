@@ -73,13 +73,24 @@ uint8_t parse_gps_byte(GPS_Struct *gps, uint8_t byte)
 	gps->gps_string[gps->counter++] = byte;
 	if (gps->counter >= GPGGA_GPS_STR_LEN)
 	{
+		set_DMS_data(gps);
 		gps->counter = 0;
 	}
 	return 0;
 }
 
-void get_DMS_data(GPS_Struct *gps){
-	uint16_t latitude_DMS_Degree = gps->latitude;
+void set_DMS_data(GPS_Struct *gps)
+{
+	//Get latitude
+	gps->latitude_DMS_Degree = (10 * (gps->latitude[0] - 0x30) + (gps->latitude[1] - 0x30));
+	gps->latitude_DMS_Minutes = (10 * (gps->latitude[2] - 0x30) + (gps->latitude[3] - 0x30));
+	uint32_t val = (1000 * (gps->latitude[5] - 0x30) + 100 * (gps->latitude[6] - 0x30) + 10 * (gps->latitude[7] - 0x30) + (gps->latitude[8] - 0x30));
+	gps->latitude_DMS_Seconds = (val * 60) / 9999;
+	//Get longitude
+	gps->longitude_DMS_Degree = (100 * (gps->longuitude[0] - 0x30) + 10 * (gps->longuitude[1] - 0x30) + (gps->longuitude[2] - 0x30));
+	gps->longitude_DMS_Minutes = (10 * (gps->longuitude[3] - 0x30) + (gps->longuitude[4] - 0x30));
+	val = (1000 * (gps->latitude[6] - 0x30) + 100 * (gps->longuitude[7] - 0x30) + 10 * (gps->longuitude[8] - 0x30) + (gps->longuitude[9] - 0x30));
+	gps->longitude_DMS_Seconds = (val * 60) / 9999;
 }
 
 uint8_t validate_GPGGA(uint8_t *MNEA)
