@@ -47,35 +47,37 @@ void UART_Init(void)
 
 void UART3_Status_IRQHandler(void)
 {
-	if ((UART3_S1 & 0x20) >> 5 ){
+	if ((UART3_S1 & 0x20) >> 5)
+	{
 		uart_recive = UART3_D;
-		parse_gps_byte(GPS_pt, uart_recive);
+		parse_gps_byte_commas(GPS_pt, uart_recive);
 	}
 }
 
-void UART3_ERR_IRQHandler(){
-	
+void UART3_ERR_IRQHandler()
+{
+
 }
 
 void UART_Read()
 {
 	//READ
-	if ((UART0_S1 & 0x20) >> 5 && !(buffer_is_full(rx_bf)))
+	if ((UART0_S1 & 0x20) >> 5)
 	{
 		uart_recive = UART0_D;
-		buffer_push(rx_bf, uart_recive);
 	}
 }
 
+/*
 void UART_Write()
 {
 	//WRITE
-	if (((UART0_S1 & 0x80) >> 7) && (!buffer_is_empty(rx_bf)))
+	if (((UART0_S1 & 0x80) >> 7))
 	{
-		UART0_D = buffer_pop(rx_bf);
+		//UART0_D = buffer_pop(rx_bf);
 		if (buffer_is_empty(rx_bf))
 		{
 			UART0_C2 &= ~(0x80);
 		}
 	}
-}
+}*/

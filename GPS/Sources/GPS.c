@@ -10,6 +10,121 @@
 uint16_t comas_index[11] =
 { 6, 13, 15, 23, 25, 34, 36, 42, 48, 55, 61 };
 
+uint8_t parse_gps_byte_commas(GPS_Struct *gps, uint8_t byte)
+{
+	gps->gps_string[gps->counter++] = byte;
+	switch (gps->current_state)
+	{
+	case IDLE:
+		if (byte == '$')
+		{
+			gps->counter = 1;
+			gps->current_state = GPGGA;
+		}
+		break;
+	case GPGGA:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			if (validate_GPGGA(gps->GPGGA_String))
+			{
+				gps->current_state = IDLE;
+			}
+			else
+			{
+				gps->current_state = TIME_STAMP;
+			}
+		}
+		else
+		{
+			gps->GPGGA_String[gps->field_counter++] = byte;
+		}
+		break;
+	case TIME_STAMP:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = LATITUDE;
+		}
+		else
+		{
+			gps->time_stamp[gps->field_counter++] = byte;
+		}
+		break;
+	case LATITUDE:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = NORTH_SOUTH;
+		}
+		else
+		{
+			gps->latitude[gps->field_counter++] = byte;
+		}
+		break;
+	case NORTH_SOUTH:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = LONGUITUDE;
+		}
+		else
+		{
+			if (byte == 'N' || byte == 'S')
+			{
+				gps->north_south = byte;
+			}
+			else
+			{
+				gps->current_state = IDLE;
+			}
+		}
+		break;
+	case LONGUITUDE:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = EAST_WEST;
+		}
+		else
+		{
+			gps->longuitude[gps->field_counter++] = byte;
+		}
+		break;
+	case EAST_WEST:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = ALTITUDE;
+		}
+		else
+		{
+			if (byte == 'E' || byte == 'W')
+			{
+				gps->east_west = byte;
+			}
+			else
+			{
+				gps->current_state = IDLE;
+			}
+		}
+		break;
+	case ALTITUDE:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = IDLE;
+			set_DMS_data(gps);
+		}
+		else
+		{
+			gps->altitude[gps->field_counter++] = byte;
+		}
+		break;
+	}
+	return 0;
+}
+
 uint8_t parse_gps_byte(GPS_Struct *gps, uint8_t byte)
 {
 	//Validate $ start byte

@@ -26,11 +26,22 @@
 //Parser
 uint16_t current_state;
 
+//FSM
+#define IDLE 				0
+#define GPGGA 				1
+#define TIME_STAMP 			2
+#define LATITUDE 			3
+#define NORTH_SOUTH 		4
+#define LONGUITUDE 			5
+#define EAST_WEST 			6
+#define ALTITUDE 			7
+
 struct GPS_Obj
 {
 	//$GPGGA,004108.000,2039.8052,N,10323.1903,W,1,05,1.8,1542.9,M,0.0,M,,*4B
 	//Control
 	uint16_t counter;
+	uint16_t current_state;
 	uint8_t field_counter;
 	uint8_t gps_string[GPGGA_GPS_STR_LEN];
 	//GPGGA Data
@@ -39,6 +50,9 @@ struct GPS_Obj
 	uint8_t latitude[GPGGA_LATITUDE_END - GPGGA_LATITUDE_START + 1];
 	uint8_t longuitude[GPGGA_LONGUITUDE_END - GPGGA_LONGUITUDE_START + 1];
 	uint8_t altitude[GPGGA_ALTITUDE_END - GPGGA_ALTITUDE_START + 1];
+	//Brujula
+	uint8_t north_south;
+	uint8_t east_west;
 	//Parsed data
 	uint32_t latitude_DMS_Degree;
 	uint32_t latitude_DMS_Minutes;
