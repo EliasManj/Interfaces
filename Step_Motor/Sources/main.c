@@ -6,6 +6,7 @@ void shiftLEDs(void);
 void ADC_init(void);
 void Ports_init(void);
 void shift(void);
+void Ports_init(void);
 
 uint8_t LEDs[3];
 uint8_t timerStateReached;
@@ -22,18 +23,18 @@ uint8_t count = 0;
 #define step_0011  ((1<<10)|(1<<11))
 #define step_0001  ((1<<11))
 #define step_1001  ((1<<2)|(1<<11))
+
 #define US104 0x3FFFU
 #define PREESCALE 1
 
 uint16_t secuencia[8] =
 { step_1000, step_1100, step_0100, step_0110, step_0010, step_0011, step_0001,
 		step_1001 };
+
 uint16_t secuencia_r[8] =
 { step_1001, step_0001, step_0011, step_0010, step_0110, step_0100, step_1100,
 		step_1000 };
-uint16_t secuencia_z[8] =
-{ step_1000, step_1100, step_0100, step_0110, step_0010, step_0011, step_0001,
-		step_1001 };
+uint8_t dir = 0;
 
 int main(void)
 {
@@ -43,6 +44,7 @@ int main(void)
 	timerStateReached = 0;
 	i = 0;
 	RGB_init();
+	Push_Btn_SW2();
 	Ports_init();
 	LPTM_init();
 	return 0;
@@ -56,6 +58,15 @@ void Ports_init(void)
 	PORTB_PCR10 =(1<<8); 		//PTB10 GPIO
 	PORTB_PCR11 =(1<<8); 		//PTB11 GPIO
 	GPIOB_PDDR |= (1 << 10) | (1 << 11) | (1 << 2) | (1 << 3); //Set GPIOB as output
+}
+
+void Push_Btn_SW2(void)
+{
+	SIM_SCGC5 |= (1 << 11);
+	PORTC_PCR6 |= (1<<8);
+	PORTC_PCR6 |= (8<<16);
+	NVIC_ICPR(1) |= (1<<(61%32));		//Clean flag of LPTM in the interrupt vector
+	NVIC_ISER(1) |= (1<<(61%32)); 		//Activate the LPTM interrupt
 }
 
 void LPTM_init(void)
@@ -106,9 +117,29 @@ void FTM1_IRQHandler()
 	}
 }
 
+void PORTC_IRQHandler()
+{
+	PORTC_PCR6 &= ~(0<<24);
+	if(dir == 0)
+	{
+		dir = 1;
+	}
+	else
+	{
+		dir = 0;
+	}
+}
+
 void shift(void)
 {
-	GPIOB_PDOR = ((secuencia_r[i++]) & 0x00000FFF);
+	if (dir == 0)
+	{
+		GPIOB_PDOR = ((secuencia_r[i++]) & 0x00000FFF);
+	}
+	else
+	{
+		GPIOB_PDOR = ((secuencia[i++]) & 0x00000FFF);
+	}
 	if (i == 8)
 	{
 		i = 0;
