@@ -50,7 +50,7 @@ void UART3_Status_IRQHandler(void)
 	if ((UART3_S1 & 0x20) >> 5)
 	{
 		uart_recive = UART3_D;
-		parse_gps_byte_commas(GPS_pt, uart_recive);
+		parse_gps_byte_commas_fast(GPS_pt, uart_recive);
 	}
 }
 

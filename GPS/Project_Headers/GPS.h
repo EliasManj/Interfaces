@@ -65,6 +65,8 @@ struct GPS_Obj
 typedef struct GPS_Obj GPS_Struct;
 
 uint8_t parse_gps_byte(GPS_Struct *gps, uint8_t byte);
+uint8_t parse_gps_byte_commas_fast(GPS_Struct *gps, uint8_t byte);
+uint8_t parse_gps_byte_commas_pretty(GPS_Struct *gps, uint8_t byte);
 uint8_t validate_GPGGA(uint8_t string[]);
 void set_DMS_data(GPS_Struct *gps);
 void Compare_Byte(uint8_t uart_recive, uint8_t byte);

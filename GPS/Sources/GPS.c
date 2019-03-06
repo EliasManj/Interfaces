@@ -10,7 +10,187 @@
 uint16_t comas_index[11] =
 { 6, 13, 15, 23, 25, 34, 36, 42, 48, 55, 61 };
 
-uint8_t parse_gps_byte_commas(GPS_Struct *gps, uint8_t byte)
+uint8_t parse_gps_byte_commas_fast(GPS_Struct *gps, uint8_t byte)
+{
+	gps->gps_string[gps->counter++] = byte;
+	switch (gps->current_state)
+	{
+	case IDLE:
+		if (byte == '$')
+		{
+			gps->counter = 1;
+			gps->current_state = GPGGA;
+		}
+		break;
+	case GPGGA:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			if (validate_GPGGA(gps->GPGGA_String))
+			{
+				gps->current_state = IDLE;
+			}
+			else
+			{
+				gps->current_state = TIME_STAMP;
+			}
+		}
+		else
+		{
+			gps->GPGGA_String[gps->field_counter++] = byte;
+		}
+		break;
+	case TIME_STAMP:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = LATITUDE;
+		}
+		break;
+	case LATITUDE:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = NORTH_SOUTH;
+			gps->latitude_DMS_Seconds = (gps->latitude_DMS_Seconds * 60) / 9999;
+		}
+		else
+		{
+			if (gps->field_counter == 0)
+			{
+				gps->latitude_DMS_Degree = 10 * (byte - 0x30);
+			}
+			else if (gps->field_counter == 1)
+			{
+				gps->latitude_DMS_Degree += (byte - 0x30);
+			}
+			else if (gps->field_counter == 2)
+			{
+				gps->latitude_DMS_Minutes = (10 * (byte - 0x30));
+			}
+			else if (gps->field_counter == 3)
+			{
+				gps->latitude_DMS_Minutes += (byte - 0x30);
+			}
+			else if (gps->field_counter == 5)
+			{
+				gps->latitude_DMS_Seconds = 1000 * (byte - 0x30);
+			}
+			else if (gps->field_counter == 6)
+			{
+				gps->latitude_DMS_Seconds += 100 * (byte - 0x30);
+			}
+			else if (gps->field_counter == 7)
+			{
+				gps->latitude_DMS_Seconds += 10 * (byte - 0x30);
+			}
+			else if (gps->field_counter == 8)
+			{
+				gps->latitude_DMS_Seconds += (byte - 0x30);
+			}
+			gps->field_counter++;
+		}
+		break;
+	case NORTH_SOUTH:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = LONGUITUDE;
+		}
+		else
+		{
+			if (byte == 'N' || byte == 'S')
+			{
+				gps->north_south = byte;
+			}
+			else
+			{
+				gps->current_state = IDLE;
+			}
+		}
+		break;
+	case LONGUITUDE:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = EAST_WEST;
+			gps->longitude_DMS_Seconds = (gps->longitude_DMS_Seconds * 60) / 9999;
+		}
+		else
+		{
+			if (gps->field_counter == 0)
+			{
+				gps->longitude_DMS_Degree = (100 * (byte - 0x30));
+			}
+			else if (gps->field_counter == 1)
+			{
+				gps->longitude_DMS_Degree += (10 * (byte - 0x30));
+			}
+			else if (gps->field_counter == 2)
+			{
+				gps->longitude_DMS_Degree += (byte - 0x30);
+			}
+			else if (gps->field_counter == 3)
+			{
+				gps->longitude_DMS_Minutes = (10 * (byte - 0x30));
+			}
+			else if (gps->field_counter == 4)
+			{
+				gps->longitude_DMS_Minutes += (byte - 0x30);
+			}
+			else if (gps->field_counter == 6)
+			{
+				gps->longitude_DMS_Seconds = (1000 * (byte - 0x30));
+			}
+			else if (gps->field_counter == 7)
+			{
+				gps->longitude_DMS_Seconds += (100 * (byte - 0x30));
+			}
+			else if (gps->field_counter == 8)
+			{
+				gps->longitude_DMS_Seconds += (10 * (byte - 0x30));
+			}
+			else if (gps->field_counter == 9)
+			{
+				gps->longitude_DMS_Seconds += (byte - 0x30);
+			}
+			gps->field_counter++;
+		}
+		break;
+	case EAST_WEST:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = ALTITUDE;
+		}
+		else
+		{
+			if (byte == 'E' || byte == 'W')
+			{
+				gps->east_west = byte;
+			}
+			else
+			{
+				gps->current_state = IDLE;
+			}
+		}
+		break;
+	case ALTITUDE:
+		if (byte == ',')
+		{
+			gps->field_counter = 0;
+			gps->current_state = IDLE;
+		}
+		else
+		{
+			gps->altitude[gps->field_counter++] = byte;
+		}
+		break;
+	}
+	return 0;
+}
+
+uint8_t parse_gps_byte_commas_pretty(GPS_Struct *gps, uint8_t byte)
 {
 	gps->gps_string[gps->counter++] = byte;
 	switch (gps->current_state)
