@@ -14,6 +14,9 @@
 //PTC16 RX
 //PTC17 TX
 
+//Button
+void Push_Btn_SW2(void);
+
 void UART_Init(void);
 void UART_Send_Byte(uint8_t data);
 void UART_Send_String(volatile char *array);
@@ -37,12 +40,12 @@ uint8_t response[2];
 
 int main(void)
 {
+	Push_Btn_SW2();
 	buffer_tx_pt = &buffer_tx;
 	buffer_rx_pt = &buffer_rx;
 	buffer_init(buffer_tx_pt, 200);
 	buffer_init(buffer_rx_pt, 200);
 	UART_Init();
-	SMS_Send("3324975397", "This is a test message lol");
 	return 0;
 }
 
@@ -219,4 +222,17 @@ void nops(uint32_t x)
 	{
 		__asm("nop");
 	}
+}
+
+void Push_Btn_SW2(void) {
+	SIM_SCGC5 |= (1 << 11);
+	PORTC_PCR6 |= (1<<8);
+	PORTC_PCR6 |= (8<<16);
+	NVIC_ICPR(1) |= (1<<(61%32));		//Clean flag of LPTM in the interrupt vector
+	NVIC_ISER(1) |= (1<<(61%32)); 		//Activate the LPTM interrupt
+}
+
+void PORTC_IRQHandler() {
+	PORTC_PCR6 &= ~(0<<24);
+	SMS_Send("3324975397", "This is a test message lol");
 }
