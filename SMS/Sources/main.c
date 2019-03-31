@@ -30,12 +30,21 @@ void UART_IRS_READ();
 void nops(uint32_t x);
 void nops10(uint32_t x);
 void UART_Recive_OK_Line(uint8_t response[]);
+void Init_SMS_objs(void);
 
 //sms struct
-SMS_Obj sms_obj;
-SMS_Obj *sms_obj_pt;
+SMS_Obj sms_obj0;
+SMS_Obj *sms_obj_pt0;
+SMS_Obj sms_obj1;
+SMS_Obj *sms_obj_pt1;
+SMS_Obj sms_obj2;
+SMS_Obj *sms_obj_pt2;
+SMS_Obj sms_obj3;
+SMS_Obj *sms_obj_pt3;
+SMS_Obj sms_obj4;
+SMS_Obj *sms_obj_pt4;
 SMS_Obj *sms_array[5];
-uint8_t sms_counter=0;
+uint8_t sms_counter = 0;
 
 bufferType buffer_tx;
 bufferType *buffer_tx_pt;
@@ -56,11 +65,9 @@ int main(void)
 	Push_Btn_SW2();
 	buffer_tx_pt = &buffer_tx;
 	buffer_rx_pt = &buffer_rx;
-	sms_obj_pt = &sms_obj;
-	sms_array[0] = sms_obj_pt;
 	buffer_init(buffer_tx_pt, 200);
 	buffer_init(buffer_rx_pt, 200);
-	SMS_Obj_Init(sms_obj_pt);
+	Init_SMS_objs();
 	UART_Init();
 	return 0;
 }
@@ -197,10 +204,15 @@ void UART_IRS_READ()
 	if ((UART3_S1 & 0x20) >> 5)
 	{
 		uart_recive = UART3_D;
-		if(parse_SMS_byte(sms_array[sms_counter], uart_recive)){
-			sms_counter++;
+		buffer_push(buffer_rx_pt, uart_recive);
+		if (sms_counter < 5)
+		{
+			if (parse_SMS_byte(sms_array[sms_counter], uart_recive, buffer_rx_pt->cnt))
+			{
+				sms_counter++;
+				buffer_clear(buffer_rx_pt);
+			} 
 		}
-
 	}
 }
 
@@ -291,6 +303,26 @@ void Push_Btn_SW3(void)
 	PORTA_PCR4 |= (8<<16);
 	NVIC_ICPR(1) |= (1<<(59%32));		//Clean flag of LPTM in the interrupt vector
 	NVIC_ISER(1) |= (1<<(59%32)); 		//Activate the LPTM interrupt
+}
+
+void Init_SMS_objs(void)
+{
+	SMS_Class_Init();
+	sms_obj_pt0 = &sms_obj0;
+	sms_obj_pt1 = &sms_obj1;
+	sms_obj_pt2 = &sms_obj2;
+	sms_obj_pt3 = &sms_obj3;
+	sms_obj_pt4 = &sms_obj4;
+	sms_array[0] = sms_obj_pt0;
+	sms_array[1] = sms_obj_pt1;
+	sms_array[2] = sms_obj_pt2;
+	sms_array[3] = sms_obj_pt3;
+	sms_array[4] = sms_obj_pt4;
+	SMS_Obj_Init(sms_obj_pt0, 1);
+	SMS_Obj_Init(sms_obj_pt1, 0);
+	SMS_Obj_Init(sms_obj_pt2, 0);
+	SMS_Obj_Init(sms_obj_pt3, 0);
+	SMS_Obj_Init(sms_obj_pt4, 0);
 }
 
 void PORTC_IRQHandler()
