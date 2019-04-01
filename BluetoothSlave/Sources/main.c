@@ -11,7 +11,8 @@
 #define NEW_LINE 	0x0A
 #define CARR_RETURN 0x0D
 #define BACKSPACE 	0x08
-
+#define OVER_SAMPLE 16
+#define CORE_CLOCK          48000000    // Core clock speed
 uint8_t rx_status;
 uint8_t state;
 uint8_t uart_recive;
@@ -23,6 +24,7 @@ Command cmd;
 Command *cmd_pt;
 
 void uart_init_pta(void);
+void uart_init_pte(void);
 void uart_bluetooth(void);
 
 int main(void)
@@ -32,7 +34,7 @@ int main(void)
 	buffer_init(rx_bf, 50);
 	cmd_init(cmd_pt, 10);
 	RGB_init();
-	uart_bluetooth();
+	uart_init_pte();
 	while (1)
 	{
 		if (rx_status == 1)
@@ -60,7 +62,6 @@ int main(void)
 	return 0;
 }
 
-
 void uart_init_pta(void)
 {
 	SIM_SCGC4 |= (1 << 10);	//CLK UART0
@@ -76,14 +77,31 @@ void uart_init_pta(void)
 	NVIC_ICPR |= (1 << 12);
 }
 
+void uart_init_pte(void)
+{
+	SIM_SCGC4 |= (1 << 10);	//CLK UART0
+	SIM_SCGC5 |= (1 << 13);	//CLOCK for PORTE
+	SIM_SOPT2 |= (1 << 26);	//Enable UART0 clock with MCGFLLCLK clock or MCGPLLCLK/2 clock
+	PORTE_PCR20 = (4<<8);	//Port control for UART_0
+	PORTE_PCR21 = (4<<8);	//Port control for UART_0a	
+	UART0_BDL = 137;		//clock=640*32768, baud rate 9600
+	UART0_C2 |= (1 << 5);		//reciver interrupt enable for RDRF
+	UART0_C2 |= (1 << 2);		//RE reciver enable
+	UART0_C2 |= (1 << 3);		//TE Transmiter enable
+	NVIC_ISER |= (1 << 12);
+	NVIC_ICPR |= (1 << 12);
+}
 
 void uart_bluetooth(void)
 {
 	SIM_SCGC4 |= (1 << 11);	//CLK UART1
 	SIM_SCGC5 |= (1 << 13);	//CLOCK for PORTE
+	MCG_C1 |= (1<<6);
 	PORTE_PCR1 = (3<<8);	//Port control for UART_0
 	PORTE_PCR0 = (3<<8);	//Port control for UART_0
-	UART1_BDL = 137;		//clock=640*32768, baud rate 9600
+	// Set the baud rate divisor
+	//UART1_BDH = 0x0D;		//clock=640*32768, baud rate 9600
+	UART1_BDL = 0x0D;		//clock=640*32768, baud rate 9600
 	UART1_C2 |= (1 << 5);		//reciver interrupt enable for RDRF
 	UART1_C2 |= (1 << 2);		//RE reciver enable
 	UART1_C2 |= (1 << 3);		//TE Transmiter enable
@@ -123,5 +141,30 @@ void UART0_IRQHandler(void)
 
 void UART1_IRQHandler(void)
 {
+	//WRITE
+	if (((UART1_S1 & 0x80) >> 7) && (!buffer_isempty(rx_bf)))
+	{
+		UART1_D = buffer_pop(rx_bf);
+		if (buffer_isempty(rx_bf))
+		{
+			UART1_C2 &= ~(0x80);
+		}
+	}
+	//READ
+	if ((UART1_S1 & 0x20) >> 5 && !(buffer_isfull(rx_bf)))
+	{
+		uart_recive = UART1_D;
+		buffer_push(rx_bf, uart_recive);
+		cmd_add(cmd_pt, uart_recive);
+		if (uart_recive != CARR_RETURN)
+		{
 
+		}
+		else
+		{
+			buffer_push(rx_bf, NEW_LINE);
+			rx_status = 1;
+		}
+		UART1_C2 |= 0x80;	//Turn on TX interrupt
+	}
 }
