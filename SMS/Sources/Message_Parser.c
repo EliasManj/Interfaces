@@ -1,8 +1,8 @@
 #include "Message_Parser.h"
 
-void debug_val(int debug_value)
+void debug_val(int a, int b, int sms)
 {
-	if (debug_value >= 52)
+	if ((a >= b) && (sms_msg_count == sms))
 	{
 		int a;
 		a = 1;
@@ -31,6 +31,7 @@ uint8_t SMS_Obj_Init(SMS_Obj *sms, uint8_t primary)
 	}
 	sms->field_counter = 0;
 	sms->quote_counter = 0;
+	sms->message_counter = 0;
 	return 0;
 }
 
@@ -87,7 +88,6 @@ uint8_t parse_SMS_byte(SMS_Obj *sms, uint8_t byte, uint32_t debug_value)
 	case CMGL:
 		if (byte == ',')
 		{
-			debug_msg_count(2);
 			sms->field_counter = 0;
 			if (validate_CMGL(sms->cmgl_string))
 			{
@@ -150,20 +150,27 @@ uint8_t parse_SMS_byte(SMS_Obj *sms, uint8_t byte, uint32_t debug_value)
 		}
 		break;
 	case MESSAGE:
-		if (byte == '\r')
+		if (byte == '\r' || sms->field_counter>=100)
 		{
+			debug_msg_count(3);
 			sms->field_counter = 0;
 			sms->current_state = IDLE;
 			sms_msg_count++;
+			allocate_msg(sms);
 			return 1;
 		}
 		else
 		{
+			sms->message_counter++;
 			sms->message[sms->field_counter++] = byte;
 		}
 		break;
 	}
 	return 0;
+}
+
+void allocate_msg(SMS_Obj *sms){
+	sms->message_pt = calloc(sms->message_counter, sizeof(uint8_t));
 }
 
 uint8_t validate_Date(uint8_t byte[])
