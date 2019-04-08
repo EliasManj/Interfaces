@@ -3,13 +3,16 @@
  *
  */
 
+//20 tx
+//21 rx
+
 #include "derivative.h" /* include peripheral declarations */
 #include "buffer.h"
 #include "cmd_parser.h"
 #include "RGB.h"
 
 #define NEW_LINE 	0x0A
-#define CARR_RETURN 0x0D
+#define CARR_RETURN '\r'
 #define BACKSPACE 	0x08
 #define OVER_SAMPLE 16
 #define CORE_CLOCK          48000000    // Core clock speed
@@ -124,16 +127,17 @@ void UART0_IRQHandler(void)
 	if ((UART0_S1 & 0x20) >> 5 && !(buffer_isfull(rx_bf)))
 	{
 		uart_recive = UART0_D;
-		buffer_push(rx_bf, uart_recive);
 		cmd_add(cmd_pt, uart_recive);
-		if (uart_recive != CARR_RETURN)
+		buffer_push(rx_bf, uart_recive);
+		if (uart_recive != 'Z')
 		{
 
 		}
 		else
 		{
-			buffer_push(rx_bf, NEW_LINE);
 			rx_status = 1;
+			buffer_push(rx_bf, NEW_LINE);
+			buffer_push(rx_bf, '\r');
 		}
 		UART0_C2 |= 0x80;	//Turn on TX interrupt
 	}
