@@ -1,0 +1,54 @@
+banggood.com
+
+Modulo wifi:
+ESP8266
+
+Modulo ZigBee (no commprar xbee)
+
+GPS
+https://randomnerdtutorials.com/guide-to-neo-6m-gps-module-with-arduino/
+http://aprs.gids.nl/nmea/
+https://www.gps-coordinates.net/
+http://removelinebreaks.net/
+
+SIM:
+https://www.elecrow.com/wiki/images/2/20/SIM800_Series_AT_Command_Manual_V1.09.pdf
+
++(52)33 2666 9732
+
+AT
+AT+CMGF=1
+
+https://arduino.stackexchange.com/questions/31535/sim800l-always-returns-creg-0-2
+https://lastminuteengineers.com/sim800l-gsm-module-arduino-tutorial/
+https://www.developershome.com/sms/readSmsByAtCommands.asp
+https://support.gfi.com/hc/en-us/articles/360012847934-How-to-troubleshoot-issues-with-sending-SMS-messages
+https://arduino.stackexchange.com/questions/29990/sim800-gsm-module-returns-0-on-atcops
+https://m2msupport.net/m2msupport/atcreg-network-registration/
+
+
+http://ww1.microchip.com/downloads/en/devicedoc/21189f.pdf
+I2C:
+https://datasheets.maximintegrated.com/en/ds/DS1307.pdf	
+
+IMU:
+https://www.waveshare.com/w/upload/e/ec/10-DOF-IMU-Sensor-Schematic.pdf
+
+Accelerometer
+https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A.pdf
+
+GPRS:
+https://www.elecrow.com/wiki/images/8/82/Sim900_hd_v1.06.pdf
+https://simcom.ee/documents/SIM900/SIM900_EVB%20kit_User%20Guide_V1.04.pdf
+https://simcom.ee/documents/SIM900/SIM900_AT%20Command%20Manual_V1.11.pdf
+Es 2.5 A o 2.0 A?
+
+Bluetooth:
+
+
+8K -> 13 bits
+K - el 1
+2^3 = 8
+therefore 13 bits
+
+RTC

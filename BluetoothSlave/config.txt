@@ -1,0 +1,23 @@
+HC-05
+
+
+https://forum.arduino.cc/index.php?topic=408938.0
+https://www.teachmemicro.com/hc-05-bluetooth-command-list/
+https://www.youtube.com/watch?v=hyME1osgr7s
+
+2016:11:212001
+
+conectar mientras tienes el boton prendido para entrar a cmd mode
+
+Config Master 
+	-> 2016:11:212001
+	->AT+ROLE=1
+	->AT+CMODE=0
+	->AT+BIND=98D3:61:F5C1ae
+	
+
+Config Slave 
+	-> HC-05 : 98D3:61:F5C1ae
+	98:D3:61:F5:01:AE
+	-> AT+UART=9600,1,0
+	

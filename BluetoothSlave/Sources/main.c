@@ -129,15 +129,15 @@ void UART0_IRQHandler(void)
 		uart_recive = UART0_D;
 		cmd_add(cmd_pt, uart_recive);
 		buffer_push(rx_bf, uart_recive);
-		if (uart_recive != 'Z')
+		if (uart_recive != CARR_RETURN)
 		{
 
 		}
 		else
 		{
 			rx_status = 1;
-			buffer_push(rx_bf, NEW_LINE);
-			buffer_push(rx_bf, '\r');
+			//buffer_push(rx_bf, NEW_LINE);
+			//buffer_push(rx_bf, '\r');
 		}
 		UART0_C2 |= 0x80;	//Turn on TX interrupt
 	}
