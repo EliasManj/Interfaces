@@ -1,0 +1,11 @@
+Send a post request
+
+AT+CIPSTART="TCP","192.168.1.66",5000
+
+"AT+CIPSEND=0,100
+POST /test-post HTTP/1.1
+Host: http://192.168.1.66:5000
+Cache-Control: no-cache
+Content-Type: application/x-www-form-urlencoded
+title=foo&body=bar&userId=1
+AT+CIPCLOSE=0"

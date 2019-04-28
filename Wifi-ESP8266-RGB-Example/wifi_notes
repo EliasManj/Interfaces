@@ -1,0 +1,35 @@
+Wifi:
+configuraciones: cl+rf, baud rate: 115200
+SSID: INFINITUMzm857 pwd: 
+
+AT+CWLAP
+
+configuracion AST
+AT+IPR=9600
+AT+CWMODE=3
+AT+CWDHCP=1,1
+AT+CWJAP="INFINITUMzm87","9bb584b045"
+AT+CIPMUX=1
+AT+CIPSERVER=1,80
+AT+CIFSR
+
+
+AT+CWJAP="elias","eliasjeje"
+
+https://components101.com/wireless/esp8266-pinout-configuration-features-datasheet
+http://fab.cba.mit.edu/classes/865.15/people/dan.chen/esp8266/
+https://www.youtube.com/watch?v=7gXcTBHLCRc	
+https://forum.arduino.cc/index.php?topic=496879.0
+
+192.168.1.65
+
++CIFSR:APIP,"192.168.4.1"
++CIFSR:APMAC,"1a:fe:34:a5:8d:c6"
++CIFSR:STAIP,"192.168.3.133"
++CIFSR:STAMAC,"18:fe:34:a5:8d:c6"
++IPD,0,426:GET /LED-R H
+
+Proyecto
+https://forum.arduino.cc/index.php?topic=496879.0
+
+

@@ -1,0 +1,11 @@
+pasos para enviar mensaje
+
++52 33 2666 9732
+
+AT+CMGF=1
+
+AT+CMGS="+521XXXXXXXXX"
+
+mensaje
+
+0x1A
