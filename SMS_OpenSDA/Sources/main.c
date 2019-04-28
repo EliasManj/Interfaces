@@ -318,11 +318,11 @@ void Init_SMS_objs(void)
 	sms_array[2] = sms_obj_pt2;
 	sms_array[3] = sms_obj_pt3;
 	sms_array[4] = sms_obj_pt4;
-	SMS_Obj_Init(sms_obj_pt0, 1);
-	SMS_Obj_Init(sms_obj_pt1, 0);
-	SMS_Obj_Init(sms_obj_pt2, 0);
-	SMS_Obj_Init(sms_obj_pt3, 0);
-	SMS_Obj_Init(sms_obj_pt4, 0);
+	Wifi_Obj_Init(sms_obj_pt0, 1);
+	Wifi_Obj_Init(sms_obj_pt1, 0);
+	Wifi_Obj_Init(sms_obj_pt2, 0);
+	Wifi_Obj_Init(sms_obj_pt3, 0);
+	Wifi_Obj_Init(sms_obj_pt4, 0);
 }
 
 void PORTC_IRQHandler()

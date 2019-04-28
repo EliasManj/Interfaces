@@ -16,18 +16,18 @@
 #define LED_G		2
 #define LED_B		3
 
-struct CommandStruct {
+struct RequestStruct {
 	volatile uint8_t size;
 	volatile uint8_t n_items;
 	volatile uint8_t is_full;
 	volatile char data[CMDLEN];
 };
 
-typedef struct CommandStruct Command;
+typedef struct RequestStruct Request;
 
-void cmd_init(Command *cmd, uint8_t size);
-void cmd_add(Command *cmd, char byte);	
-void cmd_clear(Command *cmd);
-uint16_t cmd_parse(Command *cmd);
+void cmd_init(Request *cmd, uint8_t size);
+void cmd_add(Request *cmd, char byte);	
+void cmd_clear(Request *cmd);
+uint16_t cmd_parse(Request *cmd);
 
 #endif /* CMD_PARSER_H_ */

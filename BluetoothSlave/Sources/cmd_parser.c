@@ -14,12 +14,12 @@
 
 #include "cmd_parser.h"
 
-void cmd_init(Command *cmd, uint8_t size)
+void cmd_init(Request *cmd, uint8_t size)
 {
 	cmd->size = size;
 }
 
-uint16_t cmd_parse(Command *cmd)
+uint16_t cmd_parse(Request *cmd)
 {
 	if (cmd->data[0] == 'L' && cmd->data[1] == 'E' && cmd->data[2] == 'D' && cmd->data[3] == ':')
 	{
@@ -46,7 +46,7 @@ uint16_t cmd_parse(Command *cmd)
 	}
 }
 
-void cmd_add(Command *cmd, char byte)
+void cmd_add(Request *cmd, char byte)
 {
 	if (cmd->is_full == 0)
 	{
@@ -58,7 +58,7 @@ void cmd_add(Command *cmd, char byte)
 	}
 }
 
-void cmd_clear(Command *cmd)
+void cmd_clear(Request *cmd)
 {
 	uint8_t i = 0;
 	while (i < cmd->size)

@@ -57,7 +57,7 @@ typedef struct SMS_Inbox_Struct SMS_Inbox;
 
 //Sms obj
 uint8_t parse_SMS_byte(SMS_Obj *sms, uint8_t byte, uint32_t debug_value);
-uint8_t SMS_Obj_Init(SMS_Obj *sms, uint8_t primary);
+uint8_t Wifi_Obj_Init(SMS_Obj *sms, uint8_t primary);
 void SMS_Class_Init();
 uint8_t validate_CMGL(uint8_t byte[]);
 uint8_t validate_Date(uint8_t byte[]);
@@ -65,7 +65,7 @@ uint8_t validate_At_cmgf_eq_1(uint8_t byte[]);
 uint8_t validate_At_cmgf_read_all(uint8_t byte[]);
 uint8_t string_compare(volatile uint8_t *array1, volatile uint8_t *array2, uint16_t until);
 uint8_t is_digit_or_equals(uint8_t byte);
-uint8_t SMS_Obj_Init(SMS_Obj *sms, uint8_t primary);
+uint8_t Wifi_Obj_Init(SMS_Obj *sms, uint8_t primary);
 void allocate_msg(SMS_Obj *sms);
 
 //DEbug

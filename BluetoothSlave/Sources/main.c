@@ -23,8 +23,8 @@ uint8_t uart_recive;
 bufferType Buffer_rx;
 bufferType *rx_bf;
 
-Command cmd;
-Command *cmd_pt;
+Request request;
+Request *request_pt;
 
 void uart_init_pta(void);
 void uart_init_pte(void);
@@ -33,9 +33,9 @@ void uart_bluetooth(void);
 int main(void)
 {
 	rx_bf = &Buffer_rx;
-	cmd_pt = &cmd;
+	request_pt = &request;
 	buffer_init(rx_bf, 50);
-	cmd_init(cmd_pt, 10);
+	cmd_init(request_pt, 10);
 	RGB_init();
 	uart_init_pte();
 	while (1)
@@ -43,7 +43,7 @@ int main(void)
 		if (rx_status == 1)
 		{
 			rx_status = 0;
-			state = cmd_parse(cmd_pt);
+			state = cmd_parse(request_pt);
 			switch (state)
 			{
 			case NONE:
@@ -59,7 +59,7 @@ int main(void)
 				RGB(0, 0, 1);
 				break;
 			}
-			cmd_clear(cmd_pt);
+			cmd_clear(request_pt);
 		}
 	}
 	return 0;
@@ -127,7 +127,7 @@ void UART0_IRQHandler(void)
 	if ((UART0_S1 & 0x20) >> 5 && !(buffer_isfull(rx_bf)))
 	{
 		uart_recive = UART0_D;
-		cmd_add(cmd_pt, uart_recive);
+		cmd_add(request_pt, uart_recive);
 		buffer_push(rx_bf, uart_recive);
 		if (uart_recive != CARR_RETURN)
 		{
@@ -159,7 +159,7 @@ void UART1_IRQHandler(void)
 	{
 		uart_recive = UART1_D;
 		buffer_push(rx_bf, uart_recive);
-		cmd_add(cmd_pt, uart_recive);
+		cmd_add(request_pt, uart_recive);
 		if (uart_recive != CARR_RETURN)
 		{
 

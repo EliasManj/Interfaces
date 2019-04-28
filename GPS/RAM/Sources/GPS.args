@@ -5,8 +5,8 @@
 -g3
 -gdwarf-2
 -gstrict-dwarf
--I"C:/Users/Miguel Elias/workspace/GPS/Project_Headers"
--I"C:/Users/Miguel Elias/workspace/GPS/Project_Settings/Startup_Code"
+-I"C:/Users/gonmigue/Documents/Interfaces/GPS/Project_Headers"
+-I"C:/Users/gonmigue/Documents/Interfaces/GPS/Project_Settings/Startup_Code"
 -I"C:/Freescale/CW MCU v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include"
 -I"C:/Freescale/CW MCU v11.1/MCU/ARM_GCC_Support/ewl/EWL_Runtime/include"
 -O0
