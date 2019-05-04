@@ -25,7 +25,7 @@
 //UART Channels
 #define UART0									0
 #define UART3									3
-#define NOPS									1e3
+#define NOPS									1e6
 
 //Modes
 #define CONF_MODE								0
@@ -103,14 +103,14 @@ void UART3_Init(void);
 void UART0_Init_USB(void);
 void UART_SendString_Enable_Tx(bufferType *bf, char *str, int uart_channel);
 void UART_SendString(bufferType *bf, char *str, int uart_channel);
-
+void UART_SendString_UntilEmpty(bufferType *bf, char *str, int uart_channel);
 //Configure helper functions
 void WifiConf_Init(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel);
 void WifiConf_InitBuffers(Wifi_Obj *Wifi_Obj, uint32_t size);
 void WifiConf_CipMux(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel);
 void WifiConf_Cipserver(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel);
 void WifiConf_CIFSR(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel);
-void WifiConf_Wait(uint32_t x);
+void WifiConf_Wait();
 void WifiConf_ParseByte(Wifi_Obj *Wifi_Obj, char byte);
 int WifiConf_CheckIPType(char *str);
 //Router functions
@@ -122,7 +122,8 @@ void HttpStart_Connection(bufferType *bf, char *ip, char *port, int uart_channel
 void HttpSend_Get(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri, int uart_channel);
 void HttpSend_Post(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri, char *payload, int uart_channel);
 void HttpSend_TestAPR(bufferType *bf, char *ip, char *port, char *request, int uart_channel);
-char *GetCipSendString(char *ip, char *port);
+void HttpSend_ContentLength(bufferType *bf, char *content, int uart_channel);
+void HttpSend_JSONPostRequestSize(bufferType *bf, char *ip, char *uri, char *payload, int uart_channel);
 
 
 #endif /* WIFI_H_ */

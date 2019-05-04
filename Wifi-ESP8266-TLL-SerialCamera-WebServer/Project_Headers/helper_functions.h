@@ -18,6 +18,7 @@ uint8_t _parse_uri(char *uri);
 uint8_t _strcomp(volatile char *array1, volatile char *array2, uint16_t length);
 uint8_t _strcopy(char *array1, char *array2, int length, int from1, int from2);
 int _strlen(char *str);
-char *_int2strDec(char *str, int val);
+void itoa(int value, char *result, int base);
+void delay(int val);
 
 #endif /* HELPER_FUNCTIONS_H_ */

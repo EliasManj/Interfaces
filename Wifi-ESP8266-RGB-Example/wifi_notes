@@ -39,7 +39,7 @@ AT+CWDHCP=1,1
 AT+CWJAP="INFINITUMzm87","9bb584b045"
 AT+CIPMUX=1
 AT+CIPSERVER=1,80
-AT+CIPSTART=1,"TCP","192.168.1.66",80
+AT+CIPSTART=1,"TCP","192.168.43.86",80
 
 AT+CIPSEND=1,41
 AT+CIPSEND=1,39
@@ -58,7 +58,7 @@ Message + 6?
 
 AT+CIPSEND=1,46
 GET /test_apr HTTP/1.1
-Host: 192.168.1.66
+Host: 192.168.43.86
 
 
 
@@ -74,8 +74,24 @@ Accept-Language: es-ES,es;q=0.9,en;q=0.8
 Mandarlo con 2 enters??
 
 Post
-AT+CIPSTART=1,"TCP","192.168.1.66",80
+AT+CIPSTART=1,"TCP","192.168.43.86",80
 AT+CIPSEND=1,81
+
 POST /test-post HTTP/1.1
 Host: 192.168.1.66
 Content-Type: application/json
+
+AT+CIPSTART=1,"TCP","192.168.43.86",80
+AT+CIPSEND=1,130
+POST /test-payload HTTP/1.1
+Host: 192.168.43.86
+Content-Type: application/x-www-form-urlencoded
+content-length: 45
+say=Hi&to=Mom
+
+POST /test-payload HTTP/1.1
+Host: 192.168.43.28:80
+Content-Type: application/json
+content-length: 45
+
+{"name": "ppoooopp","desc": "something"}
