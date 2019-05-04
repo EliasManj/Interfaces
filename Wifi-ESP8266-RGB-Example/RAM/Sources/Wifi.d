@@ -2,9 +2,9 @@ Sources/Wifi.o: ../Sources/Wifi.c \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h \
- C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-RGB-Example/Project_Headers/Wifi.h \
- C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-RGB-Example/Project_Headers/derivative.h \
- C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-RGB-Example/Project_Headers/MK64F12.h \
+ C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/Wifi.h \
+ C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/derivative.h \
+ C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/MK64F12.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ansi_parms.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewlGlobals.h \
@@ -13,8 +13,8 @@ Sources/Wifi.o: ../Sources/Wifi.c \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/cstdint \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/limits_api.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_lib_ext1.h \
- C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-RGB-Example/Project_Headers/buffer.h \
- C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-RGB-Example/Project_Headers/helper_functions.h
+ C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/buffer.h \
+ C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/helper_functions.h
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix:
 
@@ -22,11 +22,11 @@ C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix:
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h:
 
-C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-RGB-Example/Project_Headers/Wifi.h:
+C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/Wifi.h:
 
-C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-RGB-Example/Project_Headers/derivative.h:
+C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/derivative.h:
 
-C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-RGB-Example/Project_Headers/MK64F12.h:
+C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/MK64F12.h:
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h:
 
@@ -44,6 +44,6 @@ C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/limits_api.h:
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_lib_ext1.h:
 
-C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-RGB-Example/Project_Headers/buffer.h:
+C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/buffer.h:
 
-C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-RGB-Example/Project_Headers/helper_functions.h:
+C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/helper_functions.h:

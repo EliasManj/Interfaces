@@ -134,18 +134,18 @@ void WifiConf_ParseByte(Wifi_Obj *Wifi_Obj, char byte) {
 }
 
 void WifiConf_CipMux(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel) {
-	UART_SendString(bf, cip_mux_str, uart_channel);
+	UART_SendString_Enable_Tx(bf, cip_mux_str, uart_channel);
 	WifiConf_Wait(NOPS);
 }
 
 void WifiConf_Cipserver(Wifi_Obj *Wifi_Obj, bufferType *bf,
 		uint8_t uart_channel) {
-	UART_SendString(bf, cip_server_str, uart_channel);
+	UART_SendString_Enable_Tx(bf, cip_server_str, uart_channel);
 	//WifiConf_Wait(NOPS);
 }
 
 void WifiConf_CIFSR(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel) {
-	UART_SendString(bf, cifsr_str, uart_channel);
+	UART_SendString_Enable_Tx(bf, cifsr_str, uart_channel);
 	Wifi_Obj->conf_state = CONF_WAIT_PLUS;
 	//WifiConf_Wait(NOPS);
 }
@@ -175,7 +175,7 @@ int WifiConf_ValidateIPD(char *str){
 }
 
 //UART Interface
-void UART_SendString(bufferType *bf, char *str, int uart_channel) {
+void UART_SendString_Enable_Tx(bufferType *bf, char *str, int uart_channel) {
 	int32_t i;
 	for (i = 0; i < _strlen(str); i++) {
 		buffer_push(bf, str[i]);
