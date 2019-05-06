@@ -10,6 +10,7 @@
 int _strlen(char *str)
 {
 	uint8_t i, length;
+	length = 0;
 	for (i = 0; str[i] != '\0'; i++)
 	{
 		length++;
@@ -20,6 +21,7 @@ int _strlen(char *str)
 int _strlenInts(char *str)
 {
 	uint8_t i, length;
+	length = 0;
 	for (i = 0; str[i] != ' '; i++)
 	{
 		length++;
@@ -94,7 +96,7 @@ void itoa(int value, char *result, int base)
 	if (base < 2 || base > 36)
 	{
 		*result = '\0';
-		return result;
+		return;
 	}
 
 	char* ptr = result, *ptr1 = result, tmp_char;
@@ -117,5 +119,4 @@ void itoa(int value, char *result, int base)
 		*ptr-- = *ptr1;
 		*ptr1++ = tmp_char;
 	}
-	return result;
 }
