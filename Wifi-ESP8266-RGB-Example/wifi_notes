@@ -21,6 +21,7 @@ http://fab.cba.mit.edu/classes/865.15/people/dan.chen/esp8266/
 https://www.youtube.com/watch?v=7gXcTBHLCRc	
 https://forum.arduino.cc/index.php?topic=496879.0
 https://tttapa.github.io/ESP8266/Chap09%20-%20Web%20Server.html
+https://cdn-shop.adafruit.com/datasheets/VC0706protocol.pdf
 192.168.1.65
 
 +CIFSR:APIP,"192.168.4.1"
@@ -92,6 +93,6 @@ say=Hi&to=Mom
 POST /test-payload HTTP/1.1
 Host: 192.168.43.28:80
 Content-Type: application/json
-content-length: 45
+content-length: 40
 
-{"name": "ppoooopp","desc": "something"}
+image=aksdfjoicoooooooo

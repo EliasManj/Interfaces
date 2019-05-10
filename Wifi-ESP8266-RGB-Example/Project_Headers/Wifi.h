@@ -92,8 +92,8 @@ Wifi_Obj *wifi_pt;
 
 //UART functions
 void UART3_Init(void);
-void UART0_Init_USB(void);
-void UART_SendString_Enable_Tx(bufferType *bf, char *str, int uart_channel);
+void Camera_UART0_Init_USB(void);
+void Camera_UART_SendString_Enable_Tx(bufferType *bf, char *str, int uart_channel);
 
 //Configure helper functions
 void WifiConf_Init(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel);
