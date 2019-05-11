@@ -14,7 +14,8 @@ Sources/Wifi.o: ../Sources/Wifi.c \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/limits_api.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_lib_ext1.h \
  C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/buffer.h \
- C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/helper_functions.h
+ C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/helper_functions.h \
+ C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/RGB.h
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix:
 
@@ -47,3 +48,5 @@ C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_lib_ext1.h
 C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/buffer.h:
 
 C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/helper_functions.h:
+
+C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/RGB.h:

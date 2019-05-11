@@ -6,6 +6,7 @@
 "./Sources/buffer.o"
 "./Sources/Wifi.o"
 "./Sources/RGB.o"
+"./Sources/Camera.o"
 -mcpu=cortex-m4
 -mthumb
 -mfloat-abi=hard

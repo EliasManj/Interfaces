@@ -8,6 +8,25 @@
 #include "Wifi.h"
 #define __NVIC_PRIORITY_SHIFT   4
 
+void WifiRouter_Route(Wifi_Obj *Wifi_Obj)
+{
+	uint8_t led_state;
+	Wifi_Obj->request_pending = 0;
+	led_state = _parse_uri(Wifi_Obj->uri);
+	switch (led_state)
+	{
+	case (RED):
+		RGB(1, 0, 0);
+		break;
+	case (GREEN):
+		RGB(0, 1, 0);
+		break;
+	case (BLUE):
+		RGB(0, 0, 1);
+		break;
+	}
+}
+
 //Wifi Init
 void WifiConf_InitBuffers(Wifi_Obj *Wifi_Obj, uint32_t size)
 {
@@ -22,19 +41,13 @@ void WifiConf_InitBuffers(Wifi_Obj *Wifi_Obj, uint32_t size)
 
 void WifiConf_Init(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel)
 {
-	UART0_Init_USB();
-	UART3_Init();
+	Wifi_Obj->uart_channel = uart_channel;
+	Wifi_UART0_Init_USB();
+	Wifi_UART3_Init();
 	WifiRouter_Reset(Wifi_Obj);
-	WifiConf_CipMux(Wifi_Obj, bf, uart_channel);
-	WifiConf_Cipserver(Wifi_Obj, bf, uart_channel);
-	WifiConf_CIFSR(Wifi_Obj, bf, uart_channel);
-}
-
-void NVIC_SetPriority(int iInterruptID, unsigned char ucPriority)
-{
-	volatile unsigned char *ptrPriority = &NVIC_IP_REG(NVIC_BASE_PTR,iInterruptID) ;
-	ptrPriority += iInterruptID;
-	*ptrPriority = (ucPriority << __NVIC_PRIORITY_SHIFT);
+	WifiConf_CipMux(Wifi_Obj, bf);
+	WifiConf_Cipserver(Wifi_Obj, bf);
+	WifiConf_CIFSR(Wifi_Obj, bf);
 }
 
 //Wifi Request router functions
@@ -165,24 +178,24 @@ void WifiConf_ParseByte(Wifi_Obj *Wifi_Obj, char byte)
 	}
 }
 
-void WifiConf_CipMux(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel)
+void WifiConf_CipMux(Wifi_Obj *Wifi_Obj, bufferType *bf)
 {
-	UART_SendString_Enable_Tx(bf, cip_mux_str, uart_channel);
+	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, cip_mux_str);
 	WifiConf_Wait();
 	delay(NOPS);
 }
 
-void WifiConf_Cipserver(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel)
+void WifiConf_Cipserver(Wifi_Obj *Wifi_Obj, bufferType *bf)
 {
-	UART_SendString_Enable_Tx(bf, cip_server_str, uart_channel);
+	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, cip_server_str);
 	WifiConf_Wait();
 	delay(NOPS);
 }
 
-void WifiConf_CIFSR(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel)
+void WifiConf_CIFSR(Wifi_Obj *Wifi_Obj, bufferType *bf)
 {
 	UART3_C2 |= (1 << 2);		//RE reciver enable
-	UART_SendString_Enable_Tx(bf, cifsr_str, uart_channel);
+	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, cifsr_str);
 	Wifi_Obj->conf_state = CONF_WAIT_PLUS;
 	WifiConf_Wait();
 }
@@ -223,59 +236,57 @@ int WifiConf_ValidateIPD(char *str)
 	return 0;
 }
 
-void HttpStart_Connection(bufferType *bf, char *ip, char *port, int uart_channel)
+void HttpStart_Connection(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port)
 {
-	UART_SendString(bf, cip_start, uart_channel);
-	UART_SendString(bf, "\"", uart_channel);
-	UART_SendString(bf, ip, uart_channel);
-	UART_SendString(bf, "\"", uart_channel);
-	UART_SendString(bf, ",", uart_channel);
-	UART_SendString(bf, port, uart_channel);
-	UART_SendString_Enable_Tx(bf, "\r\n", uart_channel);
+	Wifi_UART_SendString(bf, cip_start);
+	Wifi_UART_SendString(bf, "\"");
+	Wifi_UART_SendString(bf, ip);
+	Wifi_UART_SendString(bf, "\"");
+	Wifi_UART_SendString(bf, ",");
+	Wifi_UART_SendString(bf, port);
+	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\r\n");
 	WifiConf_Wait();
 	delay(NOPS);
 }
 
 //Http requests functions
-void HttpSend_Get(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri, int uart_channel)
+void HttpSend_Get(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri)
 {
-	HttpStart_Connection(bf, ip, port, uart_channel);
-	UART_SendString(bf, cip_send, uart_channel);
-	UART_SendString(bf, port, uart_channel);
-	UART_SendString_Enable_Tx(bf, "\r\n", uart_channel);
+	HttpStart_Connection(Wifi_Obj, bf, ip, port);
+	Wifi_UART_SendString(bf, cip_send);
+	Wifi_UART_SendString(bf, port);
+	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\r\n");
 	WifiConf_Wait();
 	delay(NOPS);
-	UART_SendString(bf, "GET ", uart_channel);
-	UART_SendString(bf, uri, uart_channel);
-	UART_SendString(bf, " HTTP/1.1\r\nHost: ", uart_channel);
-	UART_SendString(bf, ip, uart_channel);
-	UART_SendString_Enable_Tx(bf, "\r\n\r\n", uart_channel);
+	Wifi_UART_SendString(bf, "GET ");
+	Wifi_UART_SendString(bf, uri);
+	Wifi_UART_SendString(bf, " HTTP/1.1\r\nHost: ");
+	Wifi_UART_SendString(bf, ip);
+	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\r\n\r\n");
 	WifiConf_Wait();
 	Wifi_Obj->wifi_mode = SERVER_MODE;
 }
 
-void HttpSend_Post(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri, char *payload, int uart_channel)
+void HttpSend_Post(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri, char *content)
 {
-	HttpStart_Connection(bf, ip, port, uart_channel);
-	UART_SendString(bf, cip_send, uart_channel);
-	UART_SendString(bf, port, uart_channel);
-	UART_SendString_Enable_Tx(bf, "\r\n", uart_channel);
+	HttpStart_Connection(Wifi_Obj, bf, ip, port);
+	HttpSend_JSONPostRequestSize(Wifi_Obj, bf, ip, uri, content);
 	WifiConf_Wait();
 	delay(NOPS);
-	UART_SendString(bf, "POST ", uart_channel);
-	UART_SendString(bf, uri, uart_channel);
-	UART_SendString(bf, " HTTP/1.1\r\nHost: ", uart_channel);
-	UART_SendString(bf, ip, uart_channel);
-	UART_SendString(bf, "\r\n", uart_channel);
-	UART_SendString(bf, "Content-Type: application/json", uart_channel);
-	UART_SendString(bf, "\r\n", uart_channel);
-	HttpSend_ContentLength(bf, payload, uart_channel);
-	UART_SendString(bf, payload, uart_channel);
-	UART_SendString_Enable_Tx(bf, "\r\n\r\n", uart_channel);
+	Wifi_UART_SendString(bf, "POST ");
+	Wifi_UART_SendString(bf, uri);
+	Wifi_UART_SendString(bf, " HTTP/1.1\r\nHost: ");
+	Wifi_UART_SendString(bf, ip);
+	Wifi_UART_SendString(bf, "\r\n");
+	Wifi_UART_SendString(bf, "Content-Type: application/json");
+	Wifi_UART_SendString(bf, "\r\n");
+	HttpSend_ContentLength(bf, content);
+	Wifi_UART_SendString(bf, content);
+	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\r\n\r\n");
 	WifiConf_Wait();
 }
 
-void HttpSend_ContentLength(bufferType *bf, char *content, int uart_channel)
+void HttpSend_ContentLength(bufferType *bf, char *content)
 {
 	int content_length, i;
 	char content_length_str[10];
@@ -285,15 +296,16 @@ void HttpSend_ContentLength(bufferType *bf, char *content, int uart_channel)
 	}
 	content_length = _strlen(content);
 	itoa(content_length, content_length_str, 10);
-	UART_SendString(bf, "content-length: ", uart_channel);
-	UART_SendString_UntilEmpty(bf, content_length_str, uart_channel);
-	UART_SendString(bf, "\r\n", uart_channel);
-	UART_SendString(bf, "\r\n", uart_channel);
+	Wifi_UART_SendString(bf, "content-length: ");
+	Wifi_UART_SendString_UntilEmpty(bf, content_length_str);
+	Wifi_UART_SendString(bf, "\r\n");
+	Wifi_UART_SendString(bf, "\r\n");
 }
 
-void HttpSend_JSONPostRequestSize(bufferType *bf, char *ip, char *uri, char *content, int uart_channel)
+void HttpSend_JSONPostRequestSize(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *uri, char *content)
 {
 	int size, i;
+	size = 0;
 	size = _strlen("POST ");
 	size += _strlen(uri);
 	size += _strlen(" HTTP/1.1\r\n");
@@ -303,19 +315,20 @@ void HttpSend_JSONPostRequestSize(bufferType *bf, char *ip, char *uri, char *con
 	size += _strlen("Content-Type: application/json\r\n");
 	size += _strlen("content-length: xxxx\r\n\r\n");
 	size += _strlen(content);
+	size += _strlen("\r\n");
 	char content_length_str[10];
 	for (i = 0; i < 10; i++)
 	{
 		content_length_str[i] = ' ';
 	}
-	size += _strlen(content);
 	itoa(size, content_length_str, 10);
-	UART_SendString_UntilEmpty(bf, content_length_str, uart_channel);
-	UART_SendString(bf, "\r\n", uart_channel);
+	Wifi_UART_SendString(bf, cip_send);
+	Wifi_UART_SendString_UntilEmpty(bf, content_length_str);
+	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\r\n");
 }
 
 //UART Interface
-void UART_SendString_Enable_Tx(bufferType *bf, char *str, int uart_channel)
+void Wifi_UART_SendString_Enable_Tx(Wifi_Obj *Wifi_Obj, bufferType *bf, char *str)
 {
 	int32_t i;
 	for (i = 0; i < _strlen(str); i++)
@@ -323,17 +336,17 @@ void UART_SendString_Enable_Tx(bufferType *bf, char *str, int uart_channel)
 		buffer_push(bf, str[i]);
 	}
 	wifi_pt->buffer_is_empty = 0;
-	if (uart_channel == UART0)
+	if (Wifi_Obj->uart_channel == UART0)
 	{
 		UART0_C2 |= 0x80; //Turn on TX interrupt		
 	}
-	else if (uart_channel == UART3)
+	else if (Wifi_Obj->uart_channel == UART3)
 	{
 		UART3_C2 |= 0x80; //Turn on TX interrupt
 	}
 }
 
-void UART_SendString(bufferType *bf, char *str, int uart_channel)
+void Wifi_UART_SendString(bufferType *bf, char *str)
 {
 	int32_t i;
 	for (i = 0; i < _strlen(str); i++)
@@ -343,31 +356,43 @@ void UART_SendString(bufferType *bf, char *str, int uart_channel)
 	wifi_pt->buffer_is_empty = 0;
 }
 
-void UART_SendString_UntilEmpty(bufferType *bf, char *str, int uart_channel)
+void Wifi_UART_SendString_UntilEmpty(bufferType *bf, char *str)
 {
 	int32_t i;
-	for (i = 0; str[i] != ' '; i++)
+	i = 0;
+	char byte;
+	byte = str[i];
+	while (byte != ' ' || byte != 0)
 	{
-		buffer_push(bf, str[i]);
+		if (byte == 0 || byte == ' ')
+		{
+			break;
+		}
+		else
+		{
+			buffer_push(bf, byte);
+		}
+		i++;
+		byte = str[i];
 	}
 	wifi_pt->buffer_is_empty = 0;
 }
 
-void UART3_Init(void)
+void Wifi_UART3_Init(void)
 {
 	SIM_SCGC4 |= (1 << 13);	//CLK UART3
 	SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK; /*Enable the PORTC clock*/
 	PORTC_PCR16 |= PORT_PCR_MUX(3);
 	PORTC_PCR17 |= PORT_PCR_MUX(3);
-	UART3_BDL = 137;		//clock=640*32768, baud rate 9600
+	UART3_BDL = BAUD9600;		//clock=640*32768, baud rate 9600
 	UART3_C2 |= (1 << 5);		//reciver interrupt enable for RDRF
 	UART3_C2 |= (1 << 3);		//TE Transmiter enable
 	NVIC_ISER(1) |= (1 << (37%32));
 	NVIC_ICPR(1) |= (1 << (37%32));
-	NVIC_SetPriority(37, 1);
+	Wifi_NVIC_SetPriority(37, 1);
 }
 
-void UART0_Init_USB(void)
+void Wifi_UART0_Init_USB(void)
 {
 	SIM_SCGC4 |= (1 << 10);	//CLK UART0
 	SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK; /*Enable the PORTB clock*/
@@ -379,5 +404,25 @@ void UART0_Init_USB(void)
 	UART0_C2 |= (1 << 3);		//TE Transmiter enable
 	NVIC_ISER(0) |= (1 << (31%32));
 	NVIC_ICPR(0) |= (1 << (32%32));
-	NVIC_SetPriority(31, 1);
+	Wifi_NVIC_SetPriority(31, 1);
+}
+
+void Wifi_NVIC_SetPriority(int iInterruptID, unsigned char ucPriority)
+{
+	volatile unsigned char *ptrPriority = &NVIC_IP_REG(NVIC_BASE_PTR,iInterruptID) ;
+	ptrPriority += iInterruptID;
+	*ptrPriority = (ucPriority << __NVIC_PRIORITY_SHIFT);
+}
+
+void Wifi_UART_SetUART(Wifi_Obj *Wifi_Obj, int uart_channel)
+{
+	Wifi_Obj->uart_channel = uart_channel;
+	if (uart_channel == UART0)
+	{
+		Wifi_UART0_Init_USB();
+	}
+	else if (Wifi_Obj->uart_channel == UART3)
+	{
+		Wifi_UART3_Init();
+	}
 }

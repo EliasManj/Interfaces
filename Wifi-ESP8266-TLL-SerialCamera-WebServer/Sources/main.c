@@ -12,13 +12,10 @@
 
 #define BACKSPACE 	0x08
 #define OVER_SAMPLE 16
-#define CORE_CLOCK          48000000    // Core clock speed
-uint8_t rx_status;
-uint8_t request_status;
 uint8_t state;
 uint8_t uart_recive;
 
-void Push_Btn_SW2(void);
+void Button_SW2_Init(void);
 void Wifi_Init(void);
 void Wifi_Main(void);
 
@@ -26,7 +23,7 @@ void Wifi_Main(void);
 int main(void)
 {
 	RGB_init();
-	Push_Btn_SW2();
+	Button_SW2_Init();
 	Wifi_Init();
 	while (1)
 	{
@@ -37,30 +34,16 @@ int main(void)
 
 void Wifi_Main(void)
 {
-	uint8_t led_state;
 	if (wifi_pt->request_pending == 1)
 	{
-		wifi_pt->request_pending = 0;
-		led_state = _parse_uri(wifi_pt->uri);
-		switch (led_state)
-		{
-		case (RED):
-			RGB(1, 0, 0);
-			break;
-		case (GREEN):
-			RGB(0, 1, 0);
-			break;
-		case (BLUE):
-			RGB(0, 0, 1);	
-			break;
-		}
+		WifiRouter_Route(wifi_pt);
 	}
 	else if (wifi_pt->send_trigger == 1)
 	{
 		wifi_pt->send_trigger = 0;
 		RGB(0, 0, 1);
 		//HttpSend_Get(wifi_pt, wifi_pt->Buffer_debug_console_pt, "192.168.3.133", "80", "/test_apr", UART0);
-		HttpSend_Post(wifi_pt, wifi_pt->Wifi_Buffer_Tx_pt, "192.168.43.86", "80", "/test-payload", "image=aksdfjoicoooooooo", UART3);
+		HttpSend_Post(wifi_pt, wifi_pt->Buffer_debug_console_pt, "192.168.43.86", "80", "/test-payload", "image=aksdfjoicoooooooo");
 	}
 }
 
@@ -68,7 +51,7 @@ void Wifi_Init(void)
 {
 	wifi_pt = &wifi;
 	WifiConf_InitBuffers(wifi_pt, 200);
-	WifiConf_Init(wifi_pt, wifi_pt->Wifi_Buffer_Tx_pt, UART3);
+	WifiConf_Init(wifi_pt, wifi_pt->Buffer_debug_console_pt, UART0);
 }
 
 void UART0_Status_IRQHandler(void)
@@ -134,7 +117,7 @@ void PORTC_IRQHandler()
 	wifi_pt->send_trigger = 1;	
 }
 
-void Push_Btn_SW2(void)
+void Button_SW2_Init(void)
 {
 	SIM_SCGC5 |= (1 << 11);
 	PORTC_PCR6 |= (1<<8);
