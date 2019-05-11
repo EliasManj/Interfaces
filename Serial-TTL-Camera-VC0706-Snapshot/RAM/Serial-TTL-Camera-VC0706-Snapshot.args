@@ -4,7 +4,9 @@
 "./Sources/main.o"
 "./Sources/helper_functions.o"
 "./Sources/buffer.o"
+"./Sources/RGB.o"
 "./Sources/Camera.o"
+"./Sources/Button.o"
 -mcpu=cortex-m4
 -mthumb
 -mfloat-abi=hard
