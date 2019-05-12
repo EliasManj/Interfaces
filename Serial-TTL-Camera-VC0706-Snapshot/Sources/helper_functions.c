@@ -18,7 +18,7 @@ int _strlen(char *str)
 	return length;
 }
 
-int _strlenInts(char *str)
+int _strlen_empty(char *str)
 {
 	uint8_t i, length;
 	length = 0;
