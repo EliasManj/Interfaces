@@ -10,23 +10,23 @@
 
 #include "derivative.h" /* include peripheral declarations */
 
-#define BUFLEN 250
+#define BUFLEN 20100
 
 struct Buffer {
-	volatile uint8_t head;
-	volatile uint8_t tail;
-	volatile uint8_t size;
+	volatile int head;
+	volatile int tail;
+	volatile int size;
 	volatile char data[BUFLEN];
 };
 
 typedef struct Buffer bufferType;
 
-void buffer_init(bufferType *bf, uint16_t size);
+void buffer_init(bufferType *bf, int size);
 void buffer_push(bufferType *bf, char data);
 char buffer_pop(bufferType *bf);
-uint8_t buffer_inc(uint8_t pointer, uint8_t size);
-uint8_t buffer_isempty(bufferType *bf);
-uint8_t buffer_isfull(bufferType *bf);
-uint8_t buffer_len(bufferType *bf);
+int buffer_inc(int pointer, int size);
+int buffer_isempty(bufferType *bf);
+int buffer_isfull(bufferType *bf);
+int buffer_len(bufferType *bf);
 
 #endif /* BUFFER_H_ */

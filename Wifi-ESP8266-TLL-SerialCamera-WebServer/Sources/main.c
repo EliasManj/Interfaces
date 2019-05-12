@@ -9,49 +9,72 @@
 
 #include "RGB.h"
 #include "Wifi.h"
+#include "Camera.h"
 
 #define BACKSPACE 	0x08
 #define OVER_SAMPLE 16
-uint8_t state;
-uint8_t uart_recive;
+
+Camera camera;
+Camera *camera_pt;
 
 void Button_SW2_Init(void);
-void Wifi_Init(void);
+void Wifi_Init_Wrapper(void);
 void Wifi_Main(void);
+void Camera_Init_Wrapper(void);
+void Camera_Main(void);
 
 //OKay
 int main(void)
 {
 	RGB_init();
 	Button_SW2_Init();
-	Wifi_Init();
+	Wifi_Init_Wrapper();
+	Camera_Init_Wrapper();
 	while (1)
 	{
+		Camera_Main();
 		Wifi_Main();
 	}
 	return 0;
+}
+
+void Camera_Main(void)
+{
+	if (camera_pt->take_snapshot == 1)
+	{
+		camera_pt->take_snapshot = 0;
+		Camera_Cmd_Snapshot(camera_pt, camera_pt->Camera_Buffer_Tx_pt);
+		wifi_pt->send_trigger = 1;
+	}
 }
 
 void Wifi_Main(void)
 {
 	if (wifi_pt->request_pending == 1)
 	{
-		WifiRouter_Route(wifi_pt);
+		Wifi_Router_Route(wifi_pt);
 	}
 	else if (wifi_pt->send_trigger == 1)
 	{
 		wifi_pt->send_trigger = 0;
 		RGB(0, 0, 1);
-		//HttpSend_Get(wifi_pt, wifi_pt->Buffer_debug_console_pt, "192.168.3.133", "80", "/test_apr", UART0);
-		HttpSend_Post(wifi_pt, wifi_pt->Buffer_debug_console_pt, "192.168.43.86", "80", "/test-payload", "image=aksdfjoicoooooooo");
+		Wifi_Http_Send_Request_PostJson(wifi_pt, wifi_pt->Buffer_debug_console_pt, "192.168.43.86", "80", "/test-payload", "image=", camera_pt->image_buffer, camera_pt->image_start_pointer, camera_pt->image_end_pointer);
+		RGB(0, 1, 1);
 	}
 }
 
-void Wifi_Init(void)
+void Camera_Init_Wrapper(void)
+{
+	camera_pt = &camera;
+	Camera_Init(camera_pt);
+	Camera_UART_Init(camera_pt, CAMERA_UART1, CAMERA_BAUD_38400);
+}
+
+void Wifi_Init_Wrapper(void)
 {
 	wifi_pt = &wifi;
-	WifiConf_InitBuffers(wifi_pt, 200);
-	WifiConf_Init(wifi_pt, wifi_pt->Buffer_debug_console_pt, UART0);
+	Wifi_InitBuffers(wifi_pt, 20000);
+	Wifi_Init(wifi_pt, wifi_pt->Buffer_debug_console_pt, WIFI_UART0);
 }
 
 void UART0_Status_IRQHandler(void)
@@ -72,11 +95,11 @@ void UART0_Status_IRQHandler(void)
 		uart_recive = UART0_D;
 		switch (wifi_pt->wifi_mode)
 		{
-		case (CONF_MODE):
-			WifiConf_ParseByte(wifi_pt, uart_recive);
+		case (WIFI_CONF_MODE):
+			Wifi_Conf_ParseByte(wifi_pt, uart_recive);
 			break;
-		case (SERVER_MODE):
-			WifiRouter_ParseByte(wifi_pt, uart_recive);
+		case (WIFI_SERVER_MODE):
+			Wifi_Router_ParseByte(wifi_pt, uart_recive);
 			break;
 		}
 	}
@@ -101,20 +124,43 @@ void UART3_Status_IRQHandler(void)
 		uart_recive = UART3_D;
 		switch (wifi_pt->wifi_mode)
 		{
-		case (CONF_MODE):
-			WifiConf_ParseByte(wifi_pt, uart_recive);
+		case (WIFI_CONF_MODE):
+			Wifi_Conf_ParseByte(wifi_pt, uart_recive);
 			break;
-		case (SERVER_MODE):
-			WifiRouter_ParseByte(wifi_pt, uart_recive);
+		case (WIFI_SERVER_MODE):
+			Wifi_Router_ParseByte(wifi_pt, uart_recive);
 			break;
 		}
+	}
+}
+
+void UART1_Status_IRQHandler(void)
+{
+	//WRITE
+	uint8_t not_empty;
+	not_empty = !buffer_isempty(camera_pt->Camera_Buffer_Tx_pt);
+	if (((UART1_S1 & 0x80) >> 7) && (not_empty))
+	{
+		UART1_D = buffer_pop(camera_pt->Camera_Buffer_Tx_pt);
+		if (buffer_isempty(camera_pt->Camera_Buffer_Tx_pt))
+		{
+			camera_pt->buffer_is_empty = 1;
+			UART1_C2 &= ~(0x80);
+		}
+	}
+	//READ
+	if ((UART1_S1 & 0x20) >> 5)
+	{
+		char uart_recive;
+		uart_recive = UART1_D;
+		Camera_Parse_Byte(camera_pt, uart_recive);
 	}
 }
 
 void PORTC_IRQHandler()
 {
 	PORTC_PCR6 &= ~(0<<24);
-	wifi_pt->send_trigger = 1;	
+	camera_pt->take_snapshot = 1;
 }
 
 void Button_SW2_Init(void)
