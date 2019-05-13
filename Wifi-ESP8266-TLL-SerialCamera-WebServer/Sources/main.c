@@ -58,7 +58,7 @@ void Wifi_Main(void)
 	{
 		wifi_pt->send_trigger = 0;
 		RGB(0, 0, 1);
-		Wifi_Http_Send_Request_PostJson(wifi_pt, wifi_pt->Buffer_debug_console_pt, "192.168.43.86", "80", "/test-payload", "image=", camera_pt->image_buffer, camera_pt->image_start_pointer, camera_pt->image_end_pointer);
+		Wifi_Http_Send_Request_PostJson(wifi_pt, wifi_pt->Buffer_debug_console_pt, "192.168.43.86", "80", "/test-payload", "image", camera_pt->image_buffer, camera_pt->image_start_pointer, camera_pt->image_end_pointer);
 		RGB(0, 1, 1);
 	}
 }
