@@ -144,8 +144,9 @@ int Wifi_Router_ValidateIPD(char *str);
 //Send HTTP request functions
 void Wifi_Http_Send_Cmd_StartConnection(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port);
 void Wifi_Http_Send_Request_ContentLength(bufferType *bf, char *keyword, char *content, int content_length);
-void Wifi_Http_Send_Request_JSONPostRequestSize(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *uri, char *keyword, char *content, int content_length);
+void Wifi_Http_Send_Request_JSONPostRequestSize(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *uri, char *keyword, char *content, int content_length, int headers_length);
 int Calculate_Content_Length(char *keyword, char *content, int content_start_index, int content_end_index);
+int Calculate_Headers_Length_Post(char *ip, char *uri, int content_length);
 
 //Http commands
 void Wifi_Http_Send_Request_Get(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri);
