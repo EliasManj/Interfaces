@@ -20,15 +20,15 @@ void WifiConf_InitBuffers(Wifi_Obj *Wifi_Obj, uint32_t size) {
 }
 
 void WifiConf_Init(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel) {
-	Camera_UART0_Init_USB();
-	UART3_Init();
+	Wifi_UART0_Init_USB();
+	Wifi_UART3_Init();
 	WifiRouter_Reset(Wifi_Obj);
 	WifiConf_CipMux(Wifi_Obj, bf, uart_channel);
 	WifiConf_Cipserver(Wifi_Obj, bf, uart_channel);
 	WifiConf_CIFSR(Wifi_Obj, bf, uart_channel);
 }
 
-void Camera_NVIC_SetPriority(int iInterruptID, unsigned char ucPriority) {
+void Wifi_NVIC_SetPriority(int iInterruptID, unsigned char ucPriority) {
 	volatile unsigned char *ptrPriority =
 			&NVIC_IP_REG(NVIC_BASE_PTR,iInterruptID) ;
 			ptrPriority += iInterruptID;
@@ -134,18 +134,18 @@ void WifiConf_ParseByte(Wifi_Obj *Wifi_Obj, char byte) {
 }
 
 void WifiConf_CipMux(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel) {
-	Camera_UART_SendString_Enable_Tx(bf, cip_mux_str, uart_channel);
+	Wifi_UART_SendString_Enable_Tx(bf, cip_mux_str, uart_channel);
 	WifiConf_Wait(NOPS);
 }
 
 void WifiConf_Cipserver(Wifi_Obj *Wifi_Obj, bufferType *bf,
 		uint8_t uart_channel) {
-	Camera_UART_SendString_Enable_Tx(bf, cip_server_str, uart_channel);
+	Wifi_UART_SendString_Enable_Tx(bf, cip_server_str, uart_channel);
 	//WifiConf_Wait(NOPS);
 }
 
 void WifiConf_CIFSR(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel) {
-	Camera_UART_SendString_Enable_Tx(bf, cifsr_str, uart_channel);
+	Wifi_UART_SendString_Enable_Tx(bf, cifsr_str, uart_channel);
 	Wifi_Obj->conf_state = CONF_WAIT_PLUS;
 	//WifiConf_Wait(NOPS);
 }
@@ -175,7 +175,7 @@ int WifiConf_ValidateIPD(char *str){
 }
 
 //UART Interface
-void Camera_UART_SendString_Enable_Tx(bufferType *bf, char *str, int uart_channel) {
+void Wifi_UART_SendString_Enable_Tx(bufferType *bf, char *str, int uart_channel) {
 	int32_t i;
 	for (i = 0; i < _strlen(str); i++) {
 		buffer_push(bf, str[i]);
@@ -187,7 +187,7 @@ void Camera_UART_SendString_Enable_Tx(bufferType *bf, char *str, int uart_channe
 	}
 }
 
-void UART3_Init(void) {
+void Wifi_UART3_Init(void) {
 	SIM_SCGC4 |= (1 << 13);	//CLK UART3
 	SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK; /*Enable the PORTC clock*/
 	PORTC_PCR16 |= PORT_PCR_MUX(3);
@@ -198,10 +198,10 @@ void UART3_Init(void) {
 	UART3_C2 |= (1 << 3);		//TE Transmiter enable
 	NVIC_ISER(1) |= (1 << (37%32));
 	NVIC_ICPR(1) |= (1 << (37%32));
-	Camera_NVIC_SetPriority(37, 1);
+	Wifi_NVIC_SetPriority(37, 1);
 }
 
-void Camera_UART0_Init_USB(void) {
+void Wifi_UART0_Init_USB(void) {
 	SIM_SCGC4 |= (1 << 10);	//CLK UART0
 	SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK; /*Enable the PORTB clock*/
 	PORTB_PCR16 |= PORT_PCR_MUX(3);
@@ -212,5 +212,5 @@ void Camera_UART0_Init_USB(void) {
 	UART0_C2 |= (1 << 3);		//TE Transmiter enable
 	NVIC_ISER(0) |= (1 << (31%32));
 	NVIC_ICPR(0) |= (1 << (32%32));
-	Camera_NVIC_SetPriority(31, 1);
+	Wifi_NVIC_SetPriority(31, 1);
 }
