@@ -2,9 +2,9 @@ Sources/RGB.o: ../Sources/RGB.c \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h \
- C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/RGB.h \
- C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/derivative.h \
- C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/MK64F12.h \
+ C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/RGB.h \
+ C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/derivative.h \
+ C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/MK64F12.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ansi_parms.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewlGlobals.h \
@@ -20,11 +20,11 @@ C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix:
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h:
 
-C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/RGB.h:
+C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/RGB.h:
 
-C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/derivative.h:
+C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/derivative.h:
 
-C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/MK64F12.h:
+C:/Users/gonmigue/Documents/Interfaces/Wifi-ESP8266-TLL-SerialCamera-WebServer/Project_Headers/MK64F12.h:
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h:
 

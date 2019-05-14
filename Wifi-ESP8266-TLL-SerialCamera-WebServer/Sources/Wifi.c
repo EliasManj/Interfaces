@@ -236,7 +236,7 @@ int Wifi_Router_ValidateIPD(char *str)
 	return 0;
 }
 
-void Wifi_Http_Send_Cmd_StartConnection(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port)
+void Wifi_Http_Cmd_StartConnection(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port)
 {
 	Wifi_UART_SendString(bf, cip_start);
 	Wifi_UART_SendString(bf, "\"");
@@ -252,7 +252,7 @@ void Wifi_Http_Send_Cmd_StartConnection(Wifi_Obj *Wifi_Obj, bufferType *bf, char
 //Http requests functions
 void Wifi_Http_Send_Request_Get(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri)
 {
-	Wifi_Http_Send_Cmd_StartConnection(Wifi_Obj, bf, ip, port);
+	Wifi_Http_Cmd_StartConnection(Wifi_Obj, bf, ip, port);
 	Wifi_UART_SendString(bf, cip_send);
 	Wifi_UART_SendString(bf, port);
 	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\r\n");
@@ -267,14 +267,15 @@ void Wifi_Http_Send_Request_Get(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, ch
 	Wifi_Obj->wifi_mode = WIFI_SERVER_MODE;
 }
 
-void Wifi_Http_Send_Request_PostJson(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri, char * keyword, char *content, int content_start_index, int content_end_index)
+void Wifi_Http_Send_Request_Post_Json(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri, char * keyword, char *content, int content_start_index, int content_end_index)
 {
 	int content_length, headers_length;
-	content_length = Calculate_Content_Length(keyword, content, content_start_index, content_end_index);
-	headers_length = Calculate_Headers_Length_Post(ip, uri, content_length);
-	Wifi_Http_Send_Cmd_StartConnection(Wifi_Obj, bf, ip, port);
+	RGB_Color(RGB_BLUE);
+	content_length = Wifi_Http_Post_Calculate_JSON_Length(keyword, content, content_start_index, content_end_index);
+	headers_length = Wifi_Http_Post_Calculate_HttpHeaders_Length(ip, uri, content_length);
+	Wifi_Http_Cmd_StartConnection(Wifi_Obj, bf, ip, port);
 	Wifi_UART_WaitEmptyBuffer();
-	Wifi_Http_Send_Request_JSONPostRequestSize(Wifi_Obj, bf, ip, uri, keyword, content, content_length, headers_length);
+	Wifi_Http_Post_Send_JSON_PacketLength(Wifi_Obj, bf, ip, uri, keyword, content, content_length, headers_length);
 	Wifi_UART_WaitEmptyBuffer();
 	delay(WIFI_NOPS);
 	Wifi_UART_SendString(bf, "POST ");
@@ -286,7 +287,7 @@ void Wifi_Http_Send_Request_PostJson(Wifi_Obj *Wifi_Obj, bufferType *bf, char *i
 	Wifi_UART_SendString(bf, "\r\n");
 	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "content-length: ");
 	Wifi_UART_WaitEmptyBuffer();
-	Wifi_Http_Send_Request_ContentLength(bf, keyword, content, content_length);
+	Wifi_Http_Post_Send_Request_JSON_JSONLength(bf, keyword, content, content_length);
 	Wifi_UART_SendString(bf, "\r\n");
 	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\r\n");
 	Wifi_UART_WaitEmptyBuffer();
@@ -300,9 +301,10 @@ void Wifi_Http_Send_Request_PostJson(Wifi_Obj *Wifi_Obj, bufferType *bf, char *i
 	Wifi_UART_WaitEmptyBuffer();
 	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\r\n");
 	Wifi_UART_WaitEmptyBuffer();
+	RGB_Color(RGB_CYAN);
 }
 
-void Wifi_Http_Send_Request_ContentLength(bufferType *bf, char *keyword, char *content, int content_length)
+void Wifi_Http_Post_Send_Request_JSON_JSONLength(bufferType *bf, char *keyword, char *content, int content_length)
 {
 	int i;
 	char content_length_str[10];
@@ -314,7 +316,7 @@ void Wifi_Http_Send_Request_ContentLength(bufferType *bf, char *keyword, char *c
 	Wifi_UART_SendString_UntilEmpty(bf, content_length_str);
 }
 
-int Calculate_Content_Length(char *keyword, char *content, int content_start_index, int content_end_index)
+int Wifi_Http_Post_Calculate_JSON_Length(char *keyword, char *content, int content_start_index, int content_end_index)
 {
 	int content_length;
 	content_length = 0;
@@ -323,10 +325,11 @@ int Calculate_Content_Length(char *keyword, char *content, int content_start_ind
 	content_length += _strlen("\":\"");
 	content_length += _strlen("\"}");
 	content_length += content_end_index - content_start_index + 1;
+	content_length += _strlen("\r\n");
 	return content_length;
 }
 
-int Calculate_Headers_Length_Post(char *ip, char *uri, int content_length)
+int Wifi_Http_Post_Calculate_HttpHeaders_Length(char *ip, char *uri, int content_length)
 {
 	int request_length = 0;
 	int i;
@@ -347,11 +350,10 @@ int Calculate_Headers_Length_Post(char *ip, char *uri, int content_length)
 	request_length += _strlen(content_length_str);
 	request_length += _strlen("\r\n");
 	request_length += _strlen("\r\n");
-	request_length += content_length;
 	return request_length;
 }
 
-void Wifi_Http_Send_Request_JSONPostRequestSize(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *uri, char *keyword, char *content, int content_length, int headers_length)
+void Wifi_Http_Post_Send_JSON_PacketLength(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *uri, char *keyword, char *content, int content_length, int headers_length)
 {
 	char request_length_str[10];
 	int i;
@@ -359,7 +361,7 @@ void Wifi_Http_Send_Request_JSONPostRequestSize(Wifi_Obj *Wifi_Obj, bufferType *
 	{
 		request_length_str[i] = ' ';
 	}
-	itoa(headers_length, request_length_str, 10);
+	itoa(headers_length+content_length, request_length_str, 10);
 	Wifi_UART_SendString(bf, cip_send);
 	Wifi_UART_SendString_UntilEmpty(bf, request_length_str);
 	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\r\n");
