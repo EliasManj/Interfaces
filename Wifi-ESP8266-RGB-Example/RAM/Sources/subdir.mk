@@ -8,6 +8,7 @@
 C_SRCS_QUOTED += \
 "../Sources/RGB.c" \
 "../Sources/Wifi.c" \
+"../Sources/Wifi_Uart_Interface.c" \
 "../Sources/buffer.c" \
 "../Sources/helper_functions.c" \
 "../Sources/main.c" \
@@ -15,6 +16,7 @@ C_SRCS_QUOTED += \
 C_SRCS += \
 ../Sources/RGB.c \
 ../Sources/Wifi.c \
+../Sources/Wifi_Uart_Interface.c \
 ../Sources/buffer.c \
 ../Sources/helper_functions.c \
 ../Sources/main.c \
@@ -22,6 +24,7 @@ C_SRCS += \
 OBJS += \
 ./Sources/RGB.o \
 ./Sources/Wifi.o \
+./Sources/Wifi_Uart_Interface.o \
 ./Sources/buffer.o \
 ./Sources/helper_functions.o \
 ./Sources/main.o \
@@ -29,6 +32,7 @@ OBJS += \
 C_DEPS += \
 ./Sources/RGB.d \
 ./Sources/Wifi.d \
+./Sources/Wifi_Uart_Interface.d \
 ./Sources/buffer.d \
 ./Sources/helper_functions.d \
 ./Sources/main.d \
@@ -36,6 +40,7 @@ C_DEPS += \
 OBJS_QUOTED += \
 "./Sources/RGB.o" \
 "./Sources/Wifi.o" \
+"./Sources/Wifi_Uart_Interface.o" \
 "./Sources/buffer.o" \
 "./Sources/helper_functions.o" \
 "./Sources/main.o" \
@@ -43,6 +48,7 @@ OBJS_QUOTED += \
 C_DEPS_QUOTED += \
 "./Sources/RGB.d" \
 "./Sources/Wifi.d" \
+"./Sources/Wifi_Uart_Interface.d" \
 "./Sources/buffer.d" \
 "./Sources/helper_functions.d" \
 "./Sources/main.d" \
@@ -50,6 +56,7 @@ C_DEPS_QUOTED += \
 OBJS_OS_FORMAT += \
 ./Sources/RGB.o \
 ./Sources/Wifi.o \
+./Sources/Wifi_Uart_Interface.o \
 ./Sources/buffer.o \
 ./Sources/helper_functions.o \
 ./Sources/main.o \
@@ -72,9 +79,17 @@ Sources/Wifi.o: ../Sources/Wifi.c
 	@echo 'Finished building: $<'
 	@echo ' '
 
-Sources/buffer.o: ../Sources/buffer.c
+Sources/Wifi_Uart_Interface.o: ../Sources/Wifi_Uart_Interface.c
 	@echo 'Building file: $<'
 	@echo 'Executing target #3 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/Wifi_Uart_Interface.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Wifi_Uart_Interface.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/buffer.o: ../Sources/buffer.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #4 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/buffer.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/buffer.o"
 	@echo 'Finished building: $<'
@@ -82,7 +97,7 @@ Sources/buffer.o: ../Sources/buffer.c
 
 Sources/helper_functions.o: ../Sources/helper_functions.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #4 $<'
+	@echo 'Executing target #5 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/helper_functions.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/helper_functions.o"
 	@echo 'Finished building: $<'
@@ -90,7 +105,7 @@ Sources/helper_functions.o: ../Sources/helper_functions.c
 
 Sources/main.o: ../Sources/main.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #5 $<'
+	@echo 'Executing target #6 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/main.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/main.o"
 	@echo 'Finished building: $<'

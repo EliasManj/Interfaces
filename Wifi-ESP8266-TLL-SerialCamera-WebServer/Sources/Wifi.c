@@ -6,7 +6,6 @@
  */
 
 #include "Wifi.h"
-#define __NVIC_PRIORITY_SHIFT   4
 
 void Wifi_Router_Route(Wifi_Obj *Wifi_Obj)
 {
@@ -292,7 +291,7 @@ void Wifi_Http_Send_Request_PostJson(Wifi_Obj *Wifi_Obj, bufferType *bf, char *i
 	Wifi_UART_WaitEmptyBuffer();
 	Wifi_UART_SendString(bf, "{\"");
 	Wifi_UART_SendString(bf, keyword);
-	Wifi_UART_SendString(bf, "\":"); 
+	Wifi_UART_SendString(bf, "\":");
 	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\"");
 	Wifi_UART_WaitEmptyBuffer();
 	Wifi_UART_SubString(Wifi_Obj, bf, content, content_start_index, content_end_index);
@@ -302,7 +301,44 @@ void Wifi_Http_Send_Request_PostJson(Wifi_Obj *Wifi_Obj, bufferType *bf, char *i
 	Wifi_UART_WaitEmptyBuffer();
 }
 
+void Wifi_Http_Prepare_Request_PostJson(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri, char * keyword, char *image, int content_start_index, int content_end_index)
+{
+	int content_length, headers_length;
+	content_length = Calculate_Content_Length(keyword, image, content_start_index, content_end_index);
+	headers_length = Calculate_Headers_Length_Post(ip, uri, content_length);
+	Add_To_PostRequest_Message(Wifi_Obj, "POST ");
+	Add_To_PostRequest_Message(Wifi_Obj, uri);
+	Add_To_PostRequest_Message(Wifi_Obj, " HTTP/1.1\r\nHost: ");
+	Add_To_PostRequest_Message(Wifi_Obj, ip);
+	Add_To_PostRequest_Message(Wifi_Obj, "\r\n");
+	Add_To_PostRequest_Message(Wifi_Obj, "Content-Type: application/json");
+	Add_To_PostRequest_Message(Wifi_Obj, "\r\n");
+	Add_To_PostRequest_Message(Wifi_Obj, "content-length: ");
+	Wifi_Http_Prepare_Request_PostJson_AddContentLength(Wifi_Obj, keyword, image, headers_length);
+	Add_To_PostRequest_Message(Wifi_Obj, "\r\n");
+	Add_To_PostRequest_Message(Wifi_Obj, "\r\n");
+	Add_To_PostRequest_Message(Wifi_Obj, "{\"");
+	Add_To_PostRequest_Message(Wifi_Obj, keyword);
+	Add_To_PostRequest_Message(Wifi_Obj, "\":");
+	Add_To_PostRequest_Message(Wifi_Obj, "\"");
+	Add_To_PostRequest_Message_ImageChunk(Wifi_Obj, image, content_start_index, headers_length);
+	Add_To_PostRequest_Message(Wifi_Obj, "\"}");
+	Add_To_PostRequest_Message(Wifi_Obj, "\r\n");
+}
+
 void Wifi_Http_Send_Request_ContentLength(bufferType *bf, char *keyword, char *content, int content_length)
+{
+	int i;
+	char content_length_str[10];
+	for (i = 0; i < 10; i++)
+	{
+		content_length_str[i] = ' ';
+	}
+	itoa(content_length, content_length_str, 10);
+	Wifi_UART_SendString_UntilEmpty(bf, content_length_str);
+}
+
+void Add_To_PostRequest_Message_ContentLength_2048(bufferType *bf, char *keyword, char *content, int content_length)
 {
 	int i;
 	char content_length_str[10];
@@ -336,12 +372,12 @@ int Calculate_Headers_Length_Post(char *ip, char *uri, int content_length)
 		content_length_str[i] = ' ';
 	}
 	itoa(content_length, content_length_str, 10);
-	request_length += _strlen("POST "); 
-	request_length += _strlen(uri); 
-	request_length += _strlen(" HTTP/1.1\r\n"); 
-	request_length += _strlen("Host: "); 
-	request_length += _strlen(ip); 
-	request_length += _strlen("\r\n"); 
+	request_length += _strlen("POST ");
+	request_length += _strlen(uri);
+	request_length += _strlen(" HTTP/1.1\r\n");
+	request_length += _strlen("Host: ");
+	request_length += _strlen(ip);
+	request_length += _strlen("\r\n");
 	request_length += _strlen("Content-Type: application/json\r\n");
 	request_length += _strlen("content-length: ");
 	request_length += _strlen(content_length_str);
@@ -365,40 +401,30 @@ void Wifi_Http_Send_Request_JSONPostRequestSize(Wifi_Obj *Wifi_Obj, bufferType *
 	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "\r\n");
 }
 
-//UART Interface
-void Wifi_UART_SendString_Enable_Tx(Wifi_Obj *Wifi_Obj, bufferType *bf, char *str)
+void Wifi_Http_Prepare_Request_PostJson_AddContentLength(Wifi_Obj *Wifi_Obj, char *keyword, char *content, int header_length)
+{
+	char json_length_str[10];
+	int json_length, i;
+	json_length = 2048 - header_length;
+	for (i = 0; i < 10; i++)
+	{
+		json_length_str[i] = ' ';
+	}
+	itoa(json_length, json_length_str, 10);
+	Add_To_PostRequest_Message_UntilEmpty(Wifi_Obj->post_request, json_length_str);
+
+}
+
+void Add_To_PostRequest_Message(Wifi_Obj *Wifi_Obj, char *str)
 {
 	int32_t i;
 	for (i = 0; i < _strlen(str); i++)
 	{
-		buffer_push(bf, str[i]);
+		Wifi_Obj->post_request[Wifi_Obj->post_request_index++] = str[i];
 	}
-	wifi_pt->buffer_is_empty = 0;
-	Wifi_Enable_Tx(Wifi_Obj);
 }
 
-void Wifi_UART_SubString(Wifi_Obj *Wifi_Obj, bufferType *bf, char *str, int start, int end)
-{
-	int32_t i;
-	for (i = start; i <= end; i++)
-	{
-		buffer_push(bf, str[i]);
-	}
-	wifi_pt->buffer_is_empty = 0;
-	Wifi_Enable_Tx(Wifi_Obj);
-}
-
-void Wifi_UART_SendString(bufferType *bf, char *str)
-{
-	int32_t i;
-	for (i = 0; i < _strlen(str); i++)
-	{
-		buffer_push(bf, str[i]);
-	}
-	wifi_pt->buffer_is_empty = 0;
-}
-
-void Wifi_UART_SendString_UntilEmpty(bufferType *bf, char *str)
+void Add_To_PostRequest_Message_UntilEmpty(Wifi_Obj *Wifi_Obj, char *str)
 {
 	int32_t i;
 	i = 0;
@@ -412,7 +438,7 @@ void Wifi_UART_SendString_UntilEmpty(bufferType *bf, char *str)
 		}
 		else
 		{
-			buffer_push(bf, byte);
+			Wifi_Obj->post_request[Wifi_Obj->post_request_index++] = byte;
 		}
 		i++;
 		byte = str[i];
@@ -420,63 +446,13 @@ void Wifi_UART_SendString_UntilEmpty(bufferType *bf, char *str)
 	wifi_pt->buffer_is_empty = 0;
 }
 
-void Wifi_Enable_Tx(Wifi_Obj *Wifi_Obj)
+void Add_To_PostRequest_Message_ImageChunk(Wifi_Obj *Wifi_Obj, char *image, int image_start_index, int header_length)
 {
-	if (Wifi_Obj->uart_channel == WIFI_UART0)
+	int json_length, i;
+	json_length = 2048 - header_length;
+	for (i = 0; i < json_length; i++)
 	{
-		UART0_C2 |= 0x80; //Turn on TX interrupt		
-	}
-	else if (Wifi_Obj->uart_channel == WIFI_UART3)
-	{
-		UART3_C2 |= 0x80; //Turn on TX interrupt
+		Wifi_Obj->post_request[Wifi_Obj->post_request_index++] =  image[image_start_index+(Wifi_Obj->image_pointer++)];
 	}
 }
 
-void Wifi_UART_Init_3(void)
-{
-	SIM_SCGC4 |= (1 << 13);	//CLK UART3
-	SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK; /*Enable the PORTC clock*/
-	PORTC_PCR16 |= PORT_PCR_MUX(3);
-	PORTC_PCR17 |= PORT_PCR_MUX(3);
-	UART3_BDL = WIFI_BAUD9600;		//clock=640*32768, baud rate 9600
-	UART3_C2 |= (1 << 5);		//reciver interrupt enable for RDRF
-	UART3_C2 |= (1 << 3);		//TE Transmiter enable
-	NVIC_ISER(1) |= (1 << (37%32));
-	NVIC_ICPR(1) |= (1 << (37%32));
-	Wifi_NVIC_SetPriority(37, 1);
-}
-
-void Wifi_UART_Init_0(void)
-{
-	SIM_SCGC4 |= (1 << 10);	//CLK UART0
-	SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK; /*Enable the PORTB clock*/
-	PORTB_PCR16 |= PORT_PCR_MUX(3);
-	PORTB_PCR17 |= PORT_PCR_MUX(3);
-	UART0_BDL = 137;		//clock=640*32768, baud rate 9600
-	UART0_C2 |= (1 << 5);		//reciver interrupt enable for RDRF
-	UART0_C2 |= (1 << 2);		//RE reciver enable
-	UART0_C2 |= (1 << 3);		//TE Transmiter enable
-	NVIC_ISER(0) |= (1 << (31%32));
-	NVIC_ICPR(0) |= (1 << (32%32));
-	Wifi_NVIC_SetPriority(31, 1);
-}
-
-void Wifi_NVIC_SetPriority(int iInterruptID, unsigned char ucPriority)
-{
-	volatile unsigned char *ptrPriority = &NVIC_IP_REG(NVIC_BASE_PTR,iInterruptID) ;
-	ptrPriority += iInterruptID;
-	*ptrPriority = (ucPriority << __NVIC_PRIORITY_SHIFT);
-}
-
-void Wifi_UART_Init(Wifi_Obj *Wifi_Obj, int uart_channel)
-{
-	Wifi_Obj->uart_channel = uart_channel;
-	if (uart_channel == WIFI_UART0)
-	{
-		Wifi_UART_Init_0();
-	}
-	else if (Wifi_Obj->uart_channel == WIFI_UART3)
-	{
-		Wifi_UART_Init_3();
-	}
-}

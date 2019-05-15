@@ -14,6 +14,10 @@
 #include "RGB.h"
 #include "Camera.h"
 
+
+#define __NVIC_PRIORITY_SHIFT   4
+#define JSON_SIZE	15000
+
 //Other
 #define WIFI_NEW_LINE 	'\n'
 #define WIFI_CARR_RETURN '\r'
@@ -103,25 +107,15 @@ struct Wifi_Struct
 	//Send Mode
 	uint8_t send_trigger;
 	char send_cip_start_str[38];
+	char post_request[JSON_SIZE];
+	int post_request_index;
+	int image_pointer;
 };
 
 typedef struct Wifi_Struct Wifi_Obj;
 
 Wifi_Obj wifi;
 Wifi_Obj *wifi_pt;
-
-//UART init functions
-void Wifi_UART_Init(Wifi_Obj *Wifi_Obj, int uart_channel);
-void Wifi_UART_Init_3(void);
-void Wifi_UART_Init_0(void);
-
-//UART functions
-void Wifi_UART_SendString_Enable_Tx(Wifi_Obj *Wifi_Obj, bufferType *bf, char *str);
-void Wifi_UART_SendString(bufferType *bf, char *str);
-void Wifi_UART_SendString_UntilEmpty(bufferType *bf, char *str);
-void Wifi_UART_SubString(Wifi_Obj *Wifi_Obj, bufferType *bf, char *str, int start, int end);
-void Wifi_UART_WaitEmptyBuffer();
-void Wifi_Enable_Tx(Wifi_Obj *Wifi_Obj);
 
 //Wifi functions
 void Wifi_Init(Wifi_Obj *Wifi_Obj, bufferType *bf, uint8_t uart_channel);
@@ -148,11 +142,17 @@ void Wifi_Http_Send_Request_JSONPostRequestSize(Wifi_Obj *Wifi_Obj, bufferType *
 int Calculate_Content_Length(char *keyword, char *content, int content_start_index, int content_end_index);
 int Calculate_Headers_Length_Post(char *ip, char *uri, int content_length);
 
+void Wifi_Http_Prepare_Request_PostJson(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri, char * keyword, char *content, int content_start_index, int content_end_index);
+void Wifi_Http_Prepare_Request_PostJson_AddContentLength(Wifi_Obj *Wifi_Obj, char *keyword, char *content, int header_length);
+void Add_To_PostRequest_Message(Wifi_Obj *Wifi_Obj, char *str);
+void Add_To_PostRequest_Message_UntilEmpty(Wifi_Obj *Wifi_Obj, char *str);
+void Add_To_PostRequest_Message_ImageChunk(Wifi_Obj *Wifi_Obj, char *image, int image_start_index, int header_length);
+
 //Http commands
 void Wifi_Http_Send_Request_Get(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri);
 void Wifi_Http_Send_Request_PostJson(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri, char * keyword, char *content, int content_start_index, int content_end_index);
 void Wifi_Http_Send_Request_TestAPR(bufferType *bf, char *ip, char *port, char *request, int uart_channel);
 
-void Wifi_NVIC_SetPriority(int iInterruptID, unsigned char ucPriority);
+
 
 #endif /* WIFI_H_ */

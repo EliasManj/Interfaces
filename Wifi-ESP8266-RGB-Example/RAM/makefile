@@ -2,7 +2,7 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-#Progress monitor hint: 8
+#Progress monitor hint: 9
 first : all
 -include ../makefile.init
 
@@ -43,30 +43,30 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-Wifi_server.elf \
+Wifi-ESP8266-RGB-Example.elf \
 
 EXECUTABLES_QUOTED += \
-"Wifi_server.elf" \
+"Wifi-ESP8266-RGB-Example.elf" \
 
 EXECUTABLES_OS_FORMAT += \
-Wifi_server.elf \
+Wifi-ESP8266-RGB-Example.elf \
 
 
 # All Target
-all: warning-messages explicit-dependencies Wifi_server.elf secondary-outputs
+all: warning-messages explicit-dependencies Wifi-ESP8266-RGB-Example.elf secondary-outputs
 
 # Tool invocations
-Wifi_server.elf: $(OBJS) $(USER_OBJS) ../Project_Settings/Linker_Files/MK64FN1M0_ram.ld
+Wifi-ESP8266-RGB-Example.elf: $(OBJS) $(USER_OBJS) ../Project_Settings/Linker_Files/MK64FN1M0_ram.ld
 	@echo 'Building target: $@'
-	@echo 'Executing target #9 $@'
+	@echo 'Executing target #10 $@'
 	@echo 'Invoking: ARM Ltd Windows GCC C Linker'
-	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc"  $(USER_OBJS_QUOTED) $(LIBS_QUOTED) @"Wifi_server.args" -o"Wifi_server.elf"
+	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc"  $(USER_OBJS_QUOTED) $(LIBS_QUOTED) @"Wifi-ESP8266-RGB-Example.args" -o"Wifi-ESP8266-RGB-Example.elf"
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(S_DEPS_QUOTED) "./*/*/*.o" "./*/*.o"  $(S_UPPER_DEPS_QUOTED) $(ASM_DEPS_QUOTED) $(ASM_UPPER_DEPS_QUOTED) $(SX_DEPS_QUOTED) $(EXECUTABLES_QUOTED) "./*/*/*.d" "./*/*.d"  $(ProjDirPath)/RAM/Wifi_server.elf
+	-$(RM) $(S_DEPS_QUOTED) "./*/*/*.o" "./*/*.o"  $(S_UPPER_DEPS_QUOTED) $(ASM_DEPS_QUOTED) $(ASM_UPPER_DEPS_QUOTED) $(SX_DEPS_QUOTED) $(EXECUTABLES_QUOTED) "./*/*/*.d" "./*/*.d"  $(ProjDirPath)/RAM/Wifi-ESP8266-RGB-Example.elf
 	-@echo ' '
 
 secondary-outputs:

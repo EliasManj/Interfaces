@@ -37,3 +37,8 @@ uint8_t _parse_uri(char *uri) {
 		return GREEN;
 	}
 }
+
+void delay(int val){
+	int i;
+	for(i = 0; i < val; i++);
+}

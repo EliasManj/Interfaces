@@ -16,7 +16,8 @@ Sources/main.o: ../Sources/main.c \
  C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/derivative.h \
  C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/Wifi.h \
  C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/buffer.h \
- C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/helper_functions.h
+ C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/helper_functions.h \
+ C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/RGB.h
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix:
 
@@ -53,3 +54,5 @@ C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/Wifi.h
 C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/buffer.h:
 
 C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/helper_functions.h:
+
+C:/Users/Miguel\ Elias/workspace/Wifi-ESP8266-RGB-Example/Project_Headers/RGB.h:
