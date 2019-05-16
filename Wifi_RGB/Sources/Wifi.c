@@ -82,7 +82,9 @@ void Wifi_Router_ParseByte(Wifi_Obj *Wifi_Obj, char byte)
 			Wifi_Obj->router_state = WIFI_ROUTER_IPD;
 			Wifi_Obj->router_field_counter = 0;
 			Wifi_Obj->router_counter = 0;
-		} else {
+		}
+		else
+		{
 			Wifi_Router_Reset(Wifi_Obj);
 		}
 		break;
@@ -128,7 +130,7 @@ void Wifi_Router_ParseByte(Wifi_Obj *Wifi_Obj, char byte)
 			Wifi_Obj->router_state = WIFI_ROUTER_IDLE;
 			Wifi_Obj->router_field_counter = 0;
 			Wifi_Obj->request_pending = 1;
-			Wifi_Router_Reset(Wifi_Obj);	
+			Wifi_Router_Reset(Wifi_Obj);
 		}
 		else
 		{
@@ -269,6 +271,10 @@ int Wifi_Router_ValidateIPD(char *str)
 
 void Wifi_Http_Cmd_StartConnection(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port)
 {
+	Wifi_UART_SendString_Enable_Tx(Wifi_Obj, bf, "AT+CIPMUX=1\r\n");
+	Wifi_UART_WaitEmptyBuffer();
+	delay(WIFI_NOPS);
+	delay(WIFI_NOPS);
 	Wifi_UART_SendString(bf, cip_start);
 	Wifi_UART_SendString(bf, "\"");
 	Wifi_UART_SendString(bf, ip);
@@ -308,6 +314,13 @@ void Wifi_Http_Send_Request_Post_Json(Wifi_Obj *Wifi_Obj, bufferType *bf, char *
 	Wifi_UART_WaitEmptyBuffer();
 	Wifi_Http_Post_Send_JSON_PacketLength(Wifi_Obj, bf, ip, uri, keyword, content, content_length, headers_length);
 	Wifi_UART_WaitEmptyBuffer();
+	delay(WIFI_NOPS);
+	delay(WIFI_NOPS);
+	delay(WIFI_NOPS);
+	delay(WIFI_NOPS);
+	delay(WIFI_NOPS);
+	delay(WIFI_NOPS);
+	delay(WIFI_NOPS);
 	delay(WIFI_NOPS);
 	Wifi_UART_SendString(bf, "POST ");
 	Wifi_UART_SendString(bf, uri);
