@@ -103,6 +103,7 @@ struct Wifi_Struct
 	//Send Mode
 	uint8_t send_trigger;
 	char send_cip_start_str[38];
+	uint8_t led_state;
 };
 
 typedef struct Wifi_Struct Wifi_Obj;
@@ -148,7 +149,7 @@ void Wifi_Http_Post_Send_Request_JSON_JSONLength(bufferType *bf, char *keyword, 
 void Wifi_Http_Post_Send_JSON_PacketLength(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *uri, char *keyword, char *content, int content_length, int headers_length);
 //Calculate length functions
 int Wifi_Http_Post_Calculate_JSON_Length(char *keyword, char *content, int content_start_index, int content_end_index);
-int Wifi_Http_Post_Calculate_HttpHeaders_Length(char *ip, char *uri, int content_length);
+int Wifi_Http_Post_Calculate_HttpHeaders_Length(char *ip, char *port, char *uri, int content_length);
 
 //Http commands
 void Wifi_Http_Send_Request_Get(Wifi_Obj *Wifi_Obj, bufferType *bf, char *ip, char *port, char *uri);

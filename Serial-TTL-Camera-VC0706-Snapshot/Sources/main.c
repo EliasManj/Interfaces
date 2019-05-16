@@ -25,6 +25,7 @@ int main(void)
 		{
 			camera_pt->take_snapshot = 0;
 			Camera_Cmd_Snapshot(camera_pt, camera_pt->Wifi_Buffer_Tx_pt);
+			Camera_Cmd_SendSerial(camera_pt, camera_pt->Buffer_debug_console_pt);
 		}
 	}
 
@@ -35,7 +36,8 @@ void Camera_Init_Wrapper(void)
 {
 	camera_pt = &camera;
 	Camera_Init(camera_pt);
-	Camera_UART_Init(camera_pt, CAMERA_UART1, CAMERA_BAUD_38400);
+	Camera_UART_Init(camera_pt, CAMERA_UART3, CAMERA_BAUD_38400);
+	Camera_SetupSerialCom_Init(camera_pt, CAMERA_UART0, CAMERA_BAUD_38400);
 }
 
 void UART0_Status_IRQHandler(void)

@@ -7,7 +7,7 @@
 
 #include "buffer.h"
 
-void buffer_init(bufferType *bf, uint16_t size){
+void buffer_init(bufferType *bf, int size){
 	bf->size = 0;
 	bf->head = 0;
 	bf->size = size;
@@ -24,24 +24,24 @@ char buffer_pop(bufferType *bf) {
 	return item;
 }
 
-uint8_t buffer_inc(uint8_t pointer, uint8_t size) {
-	uint8_t i = pointer;
+int buffer_inc(int pointer, int size) {
+	int i = pointer;
 	if (++i >= size) {
 		i = 0;
 	}
 	return i;
 }
 
-uint8_t buffer_isempty(bufferType *bf) {
+int buffer_isempty(bufferType *bf) {
 	return bf->head == bf->tail;
 }
 
-uint8_t buffer_isfull(bufferType *bf) {
+int buffer_isfull(bufferType *bf) {
 	return buffer_len(bf) == (bf->size - 1);
 }
 
-uint8_t buffer_len(bufferType *bf) {
-	uint8_t len = bf->tail - bf->head;
+int buffer_len(bufferType *bf) {
+	int len = bf->tail - bf->head;
 	if (len < 0) {
 		len += bf->size;
 	}

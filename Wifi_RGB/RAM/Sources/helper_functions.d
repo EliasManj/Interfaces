@@ -2,9 +2,9 @@ Sources/helper_functions.o: ../Sources/helper_functions.c \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h \
- C:/Users/gonmigue/Documents/Interfaces/Wifi_RGB/Project_Headers/helper_functions.h \
- C:/Users/gonmigue/Documents/Interfaces/Wifi_RGB/Project_Headers/derivative.h \
- C:/Users/gonmigue/Documents/Interfaces/Wifi_RGB/Project_Headers/MK64F12.h \
+ C:/Users/Miguel\ Elias/workspace/Wifi_RGB/Project_Headers/helper_functions.h \
+ C:/Users/Miguel\ Elias/workspace/Wifi_RGB/Project_Headers/derivative.h \
+ C:/Users/Miguel\ Elias/workspace/Wifi_RGB/Project_Headers/MK64F12.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ansi_parms.h \
  C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewlGlobals.h \
@@ -20,11 +20,11 @@ C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix:
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h:
 
-C:/Users/gonmigue/Documents/Interfaces/Wifi_RGB/Project_Headers/helper_functions.h:
+C:/Users/Miguel\ Elias/workspace/Wifi_RGB/Project_Headers/helper_functions.h:
 
-C:/Users/gonmigue/Documents/Interfaces/Wifi_RGB/Project_Headers/derivative.h:
+C:/Users/Miguel\ Elias/workspace/Wifi_RGB/Project_Headers/derivative.h:
 
-C:/Users/gonmigue/Documents/Interfaces/Wifi_RGB/Project_Headers/MK64F12.h:
+C:/Users/Miguel\ Elias/workspace/Wifi_RGB/Project_Headers/MK64F12.h:
 
 C:/Freescale/CW\ MCU\ v11.1/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h:
 

@@ -60,10 +60,16 @@ void Camera_Parse_GetSnapshot(Camera *camera, char byte)
 		}
 		if (byte == 0xD9 && camera->image_buffering)
 		{
+			camera->end_countdown = 1;
+		}
+		camera->incoming_jpg_marker = 0;
+	}
+	if(camera->end_countdown == 1){
+		camera->end_counter++;
+		if(camera->end_counter == 6){
 			camera->image_end_pointer = camera->camera_field_counter - 1;
 			Camera_ResetProperties(camera);
 		}
-		camera->incoming_jpg_marker = 0;
 	}
 	if (byte == 0xFF)
 	{
@@ -125,8 +131,8 @@ void Camera_Init(Camera *camera)
 	camera->Wifi_Buffer_Rx_pt = &camera->Wifi_Buffer_Rx;
 	camera->Buffer_debug_console_pt = &camera->Buffer_debug_console;
 	camera->Wifi_Buffer_Tx_pt = &camera->Wifi_Buffer_Tx;
-	buffer_init(camera->Wifi_Buffer_Tx_pt, 100);
-	buffer_init(camera->Buffer_debug_console_pt, 100);
+	buffer_init(camera->Wifi_Buffer_Tx_pt, 20000);
+	buffer_init(camera->Buffer_debug_console_pt, 20000);
 	camera->camera_field_counter = 0;
 	camera->take_snapshot = 0;
 	camera->camera_delta_counter = 0xFF;
@@ -139,11 +145,29 @@ void Camera_ResetProperties(Camera *camera)
 	camera->camera_delta_counter = 0xFF;
 	camera->camera_state = CAMERA_IDLE;
 	camera->image_buffering = 0;
+	camera->end_counter = 0;
+	camera->end_countdown = 0;
 }
 
 void Camera_UART_Init(Camera *camera, int uart_channel, int baud_rate)
 {
 	camera->uart_channel = uart_channel;
+	if (uart_channel == CAMERA_UART0)
+	{
+		Camera_UART_Init_0(baud_rate);
+	}
+	else if (uart_channel == CAMERA_UART1)
+	{
+		Camera_UART_Init_1(baud_rate);
+	}
+	else if (uart_channel == CAMERA_UART3)
+	{
+		Camera_UART_Init_3(baud_rate);
+	}
+}
+
+void Camera_SetupSerialCom_Init(Camera *camera, int uart_channel, int baud_rate)
+{
 	if (uart_channel == CAMERA_UART0)
 	{
 		Camera_UART_Init_0(baud_rate);
@@ -207,6 +231,23 @@ void Camera_Cmd_Snapshot(Camera *camera, bufferType *bf)
 	RGB(0, 1, 0);
 }
 
+void Camera_Cmd_SendSerial(Camera *camera, bufferType *bf)
+{
+	int i, j;
+	RGB_Color(RGB_PURPLE);
+	for (i = 0; i <= camera->image_end_pointer; i++)
+	{
+		Camera_UART_SendByte(bf, camera->image_buffer[i]);
+	}
+	Camera_UART_SendByte(bf, 0x76);
+	Camera_UART_SendByte(bf, 0x00);
+	Camera_UART_SendByte(bf, 0x36);
+	Camera_UART_SendByte(bf, 0x00);
+	Camera_UART_SendByte(bf, 0x00);
+	RGB_Color(RGB_CYAN);
+	UART0_C2 |= 0x80; //Turn on TX interrupt		
+}
+
 void Camera_Cmd_GetReadFBuf(Camera *camera, bufferType *bf)
 {
 	camera->camera_state = CAMERA_RECIVE_IMAGE;
@@ -249,7 +290,6 @@ void Camera_WaitForState(Camera *camera, int state)
 	while (camera->camera_state != state)
 		;
 }
-
 
 //Camera UART functions
 
@@ -392,7 +432,7 @@ void Camera_UART_Init_3(int baud_rate)
 void Camera_UART_Init_1(int baud_rate)
 {
 	SIM_SCGC4 |= (1 << 11);	//CLK UART1
-	SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK; 	/*Enable the PORTC clock*/
+	SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK; /*Enable the PORTC clock*/
 	PORTC_PCR4 |= PORT_PCR_MUX(3);
 	PORTC_PCR3 |= PORT_PCR_MUX(3);
 	switch (baud_rate)

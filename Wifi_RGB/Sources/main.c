@@ -13,7 +13,6 @@
 #define BACKSPACE 	0x08
 #define OVER_SAMPLE 16
 
-
 void Button_SW2_Init(void);
 void Wifi_Init_Wrapper(void);
 void Wifi_Main(void);
@@ -31,8 +30,6 @@ int main(void)
 	return 0;
 }
 
-
-
 void Wifi_Main(void)
 {
 	if (wifi_pt->request_pending == 1)
@@ -43,16 +40,25 @@ void Wifi_Main(void)
 	{
 		wifi_pt->send_trigger = 0;
 		RGB(0, 0, 1);
-		//Wifi_Http_Send_Request_Post_Json(wifi_pt, wifi_pt->Buffer_debug_console_pt, "192.168.43.86", "80", "/test-payload", "image", camera_pt->image_buffer, camera_pt->image_start_pointer, camera_pt->image_end_pointer);
-		RGB(0, 1, 1);
+		switch (wifi_pt->led_state)
+		{
+		case (RED):
+			Wifi_Http_Send_Request_Post_Json(wifi_pt, wifi_pt->Wifi_Buffer_Tx_pt, "192.168.43.86", "80", "/test-payload", "led-state", "red", 0, _strlen("red") - 1);
+			break;
+		case (BLUE):
+			Wifi_Http_Send_Request_Post_Json(wifi_pt, wifi_pt->Wifi_Buffer_Tx_pt, "192.168.43.86", "80", "/test-payload", "led-state", "blue", 0, _strlen("blue") - 1);
+			break;
+		case (GREEN):
+			Wifi_Http_Send_Request_Post_Json(wifi_pt, wifi_pt->Wifi_Buffer_Tx_pt, "192.168.43.86", "80", "/test-payload", "led-state", "green", 0, _strlen("green") - 1);
+			break;
+		}
 	}
 }
-
 
 void Wifi_Init_Wrapper(void)
 {
 	wifi_pt = &wifi;
-	Wifi_InitBuffers(wifi_pt, 100);
+	Wifi_InitBuffers(wifi_pt, 10000);
 	Wifi_Init(wifi_pt, wifi_pt->Wifi_Buffer_Tx_pt, WIFI_UART3);
 }
 
@@ -61,7 +67,9 @@ void UART0_Status_IRQHandler(void)
 	//WRITE
 	if (((UART0_S1 & 0x80) >> 7) && (!buffer_isempty(wifi_pt->Buffer_debug_console_pt)))
 	{
-		UART0_D = buffer_pop(wifi_pt->Buffer_debug_console_pt);
+		uint8_t send;
+		send = buffer_pop(wifi_pt->Buffer_debug_console_pt);
+		UART0_D = send;
 		if (buffer_isempty(wifi_pt->Buffer_debug_console_pt))
 		{
 			wifi_pt->buffer_is_empty = 1;
@@ -100,6 +108,7 @@ void UART3_Status_IRQHandler(void)
 void PORTC_IRQHandler()
 {
 	PORTC_PCR6 &= ~(0<<24);
+	wifi_pt->send_trigger = 1;
 }
 
 void Button_SW2_Init(void)

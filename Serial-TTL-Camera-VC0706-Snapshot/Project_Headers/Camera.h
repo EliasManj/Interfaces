@@ -65,6 +65,7 @@ struct Camera_Struct
 	int camera_delta_counter;
 	char cam_version[CAMERA_VER_SIZE];
 	uint8_t uart_channel;
+	uint8_t serial_send_channel;
 	//Image
 	char image_buffer[CAMERA_IMAGE_SIZE];
 	int image_end_pointer;
@@ -76,6 +77,8 @@ struct Camera_Struct
 	char buffer_len[4];
 	//Snapshot
 	uint8_t take_snapshot;
+	uint8_t end_countdown;
+	uint8_t end_counter;
 };
 
 typedef struct Camera_Struct Camera;
@@ -88,12 +91,14 @@ void Camera_WaitForState(Camera *camera, int state);
 //Camera commands
 void Camera_Cmd_GetVersion(Camera *camera, bufferType *bf);
 void Camera_Cmd_Snapshot(Camera *camera, bufferType *bf);
+void Camera_Cmd_SendSerial(Camera *camera, bufferType *bf);
 void Camera_Cmd_ResumeFrame(Camera *camera, bufferType *bf);
 void Camera_Cmd_GetFBufLen(Camera *camera, bufferType *bf);
 void Camera_Cmd_GetReadFBuf(Camera *camera, bufferType *bf);
 
 //UART Init functios
 void Camera_UART_Init(Camera *camera, int uart_channel, int baud_rate);
+void Camera_SetupSerialCom_Init(Camera *camera, int uart_channel, int baud_rate);
 void Camera_UART_Init_0(int baud_rate);
 void Camera_UART_Init_1(int baud_rate);
 void Camera_UART_Init_3(int baud_rate);
